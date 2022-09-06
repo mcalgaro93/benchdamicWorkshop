@@ -1,52 +1,116 @@
-# BuildABiocWorkshop
+# An introduction to benchdamic
 
-This package is a template for building a Bioconductor workshop. The package
-includes Github actions to:
+# Workshop description
 
-1. Set up bioconductor/bioconductor_docker:devel on Github resources
-2. Install package dependencies for your package (based on the `DESCRIPTION` file)
-3. Run `rcmdcheck::rcmdcheck`
-4. Build a pkgdown website and push it to github pages
-5. Build a docker image with the installed package and dependencies and deploy to [the Github Container Repository](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#pulling-container-images) at the name `ghcr.io/gihub_user/repo_name`, all lowercase. 
+This workshop provides an introductory example on how to work with the
+analysis framework firstly proposed in **"Assessment of statistical
+methods from single cell, bulk RNA-seq, and metagenomics applied to
+microbiome data"** by [Calgaro et al.
+(2020)](https://doi.org/10.1186/s13059-020-02104-1).
 
-## Responsibilities
+We will test a couple of methods for differential abundance (DA)
+analysis on a microbiome dataset and we will see how to test custom
+methods on the same dataset. Performances of each method are evaluated
+with respect to i) suitability of distributional assumptions (GOF), ii)
+ability to control false positives (TIEC), iii) concordance of the
+findings, and iv) enrichment of DA microbial species in specific
+conditions.
 
-Package authors are primarily responsible for:
+## Pre-requisites
 
-1. Creating a landing site of their choosing for their workshops (a website). This website should be listed in the `DESCRIPTION` file as the `URL`.
-2. Creating a docker image that will contain workshop materials and the installed packages necessary to run those materials. The name of the resulting docker image, including "tag" if desired, should be listed in a non-standard tag, `DockerImage:` in the `DESCRIPTION` file. 
+-   Basic knowledge of R syntax
+-   Familiarity with the `phyloseq` class
+-   Familiarity with DA analysis in microbiome data
 
-Both of those tasks can be accomplished using the Github actions included in this template package. The vignette accompanying this package describes how to accomplish both of these tasks.
+Some suggested background readings for the workshop:
 
-## Details
+-   "Assessment of statistical methods from single cell, bulk RNA-seq,
+    and metagenomics applied to microbiome data" by [Calgaro et al.
+    (2020)](https://doi.org/10.1186/s13059-020-02104-1)
+-   "Microbiome differential abundance methods produce different results
+    across 38 datasets" by [Nearing et al.
+    (2022)](https://doi.org/10.1038/s41467-022-28034-z);
+-   "Normalization and microbial differential abundance strategies
+    depend upon data characteristics" by [Weiss et al.
+    (2017)](https://doi.org/10.1186/s40168-017-0237-y);
 
-For detailed instructions, see the `How to build a workshop` article/vignette.
+## Preparation
 
-## Results of successful deployment
+To be able to follow along with this workshop, we have created a
+Docker installation. In order to access this, you need to
+first install [Docker](https://docs.docker.com/engine/install/) on
+your own computer. Once you have done that, you can then load the
+Docker container for this workshop by starting Docker.
 
-- A working docker image that contains the installed package and dependencies.
-- An up-to-date `pkgdown` website at https://YOURUSERNAME.github.io/YOURREPOSITORYNAME/
-- Docker image will be tagged with `latest`, `sha-XXXXXX` where `XXXXXX` is the hash of the current `master` commit, and `master`. 
+How you do this is dependent on your operating system.
 
-## To use the resulting image:
+### Windows
 
-```sh
-docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 YOURDOCKERIMAGENAME
+Hit the 'Windows' key (lower left on your keyboard, between Ctrl and
+Alt), then type Docker. If Docker is installed you should see Docker
+App highlighted - click Enter to start the App. It can take some time
+to get started. You can see it's doing something by clicking on the
+little caret (^) in the lower right of your screen - there should be a
+little animated Docker icon which indicates it's starting. Once it is
+started, open a CMD prompt by hitting the Windows key again and typing
+cmd, then Enter. In the CMD prompt type
+
 ```
-Once running, navigate to http://localhost:8787/ and then login with `rstudio`:`yourchosenpassword`. 
-
-To try with **this** repository docker image:
-
-```sh
-docker run -e PASSWORD=abc -p 8787:8787 ghcr.io/seandavi/buildabiocworkshop
+docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 mcalgaro93/benchdamicWorkshop
 ```
 
-*NOTE*: Running docker that uses the password in plain text like above exposes the password to others 
-in a multi-user system (like a shared workstation or compute node). In practice, consider using an environment 
-variable instead of plain text to pass along passwords and other secrets in docker command lines. 
+You can choose any password for rstudio - that's what you will use to
+log in. It will take some time for the Docker to be downloaded and
+started, so you might consider doing this ahead of time.
+
+### Linux
+
+For Linux, it depends on how you installed. If you used a package
+installer then presumably Docker will be set to start
+automatically. Otherwise you need to start the Docker daemon by hand
+(or set it to start automatically). There are too many variables to
+give much detailed information here; for those on Linux, the
+assumption is that you probably know what you are doing and can figure
+it out from the Docker install page.
+
+To start the daemon, if neccessary, do
+
+```
+sudo dockerd &
+## followed by 
+sudo docker run hello-world
+```
+
+If Docker is installed correctly it should print something
+informative. To get the Docker container, it's the same as for
+Windows.
+
+```
+docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 mcalgaro93/benchdamicWorkshop
+```
+
+### MacOS
+
+There is an installer for MacOS. As with Windows, follow the
+instructions - it's just a regular drag'n'drop install. Once it's
+installed and started, open a terminal prompt and as above type.
+
+```
+docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 mcalgaro93/benchdamicWorkshop
+```
+
+## Run Docker
+
+For all operating systems, once the Docker container is initialized,
+you can access it by opening a browser and typing
+
+```
+http://localhost:8787
+```
+
+Which should present you with an RStudio login. Use rstudio as the
+username and the password you used to start the Docker.
 
 
-## Whatcha get
-
-- https://seandavi.github.io/BuildABiocWorkshop
-- A Docker image that you can run locally, in the cloud, or (usually) even as a singularity container on HPC systems. 
+Then please open the file 'vignettes/introduction_to_benchdamic.Rmd' to start 
+the workshop.

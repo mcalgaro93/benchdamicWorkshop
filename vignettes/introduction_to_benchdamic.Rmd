@@ -1,0 +1,1290 @@
+---
+title: 'An introduction to benchdamic - EuroBioC2022 workshop'
+author: Matteo Calgaro^[mcalgaro93@gmail.com]
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{An introduction to benchdamic - EuroBioc2022 workshop}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: bib_intro.json
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# An introduction to benchdamic - EuroBioC2022 workshop
+
+Author: Matteo Calgaro[^1]
+
+[^1]: University of Verona
+
+Last modified: 5 September, 2022.
+
+## Overview
+
+### Description
+
+This workshop provides an introductory example on how to work with the
+analysis framework firstly proposed in **"Assessment of statistical
+methods from single cell, bulk RNA-seq, and metagenomics applied to
+microbiome data"** by [Calgaro et al.
+(2020)](https://doi.org/10.1186/s13059-020-02104-1).
+
+We will test a couple of methods for differential abundance (DA)
+analysis on a microbiome dataset and we will see how to test custom
+methods on the same dataset. Performances of each method are evaluated
+with respect to i) suitability of distributional assumptions (GOF), ii)
+ability to control false positives (TIEC), iii) concordance of the
+findings, and iv) enrichment of DA microbial species in specific
+conditions.
+
+This workshop is structured as an instructor-led live demo but you can
+decide whether to spend your time by following the examples as they are
+or by playing with the large combinations of parameters offered by each
+implemented DA method.
+
+### Pre-requisites
+
+-   Basic knowledge of R syntax
+-   Familiarity with the `phyloseq` class
+-   Familiarity with DA analysis in microbiome data
+
+Some suggested background readings for the workshop:
+
+-   "Assessment of statistical methods from single cell, bulk RNA-seq,
+    and metagenomics applied to microbiome data" by [Calgaro et al.
+    (2020)](https://doi.org/10.1186/s13059-020-02104-1)
+-   "Microbiome differential abundance methods produce different results
+    across 38 datasets" by [Nearing et al.
+    (2022)](https://doi.org/10.1038/s41467-022-28034-z);
+-   "Normalization and microbial differential abundance strategies
+    depend upon data characteristics" by [Weiss et al.
+    (2017)](https://doi.org/10.1186/s40168-017-0237-y);
+
+### *R* / *Bioconductor* packages used
+
+The Bioconductor package we will use is named `benchdamic`, acronym for
+"BENCHmarking of Differential Abundance detection methods for MICrobial
+data".
+
+### Time outline
+
+During the workshop we will have the first 35 minutes of active coding
+(using the supplied examples). Questions are being addressed during the
+final 10 minutes.
+
+| Activity             | Time       |
+|----------------------|------------|
+| Overview             | 2 - 3 mins |
+| GOF                  | 5 mins     |
+| TIEC                 | 12 mins    |
+| Concordance          | 5 mins     |
+| Enrichment           | 9 mins     |
+| Conclusions          | 1 min      |
+| Questions and Answer | 10m        |
+
+### Workshop goals and objectives
+
+During this workshop you will:
+
+-   see the main functions of `benchdamic`
+
+-   compare some DA methods on a simple microbiome dataset
+
+-   set up a custom method and include it into the benchmarking
+
+-   evaluate DA methods' performances using the graphical outputs
+
+## Workshop
+
+### Introduction
+
+Firstly we load some packages for basic functions and data.
+
+```{r load_packs}
+library(benchdamic)
+# Data management
+library(phyloseq)
+# Graphics and tables
+library(ggplot2)
+library(cowplot)
+library(kableExtra)
+```
+
+### Data loading
+
+During the workshop we will use the "ps_plaque_16S" dataset:
+
+-   30 male subjects from the Human Microbiome Project (HMP);
+
+-   Samples collected from subgingival plaque and supragingival plaque
+    for each subject (a total of 60 samples);
+
+-   all features having the same genus-level taxonomic classification
+    have been collapsed together (a total of 88 taxa corresponding to 88
+    genera).
+
+```{r load_data}
+data("ps_plaque_16S")
+ps_plaque_16S
+```
+
+### Goodness of Fit
+
+**Assumption**: Many differential abundance detection methods are based
+on parametric distributions.
+
+**Question**: Which are the parametric distributions that can fit both
+the proportion of zeros and the counts in your data?
+
+------------------------------------------------------------------------
+
+**GOF structure**
+
+Several distributions are available in `benchdamic`: 1) the negative
+binomial (**NB**) distribution as proposed by packages like `edgeR` or
+`DESeq2`, 2) the zero-inflated negative binomial (**ZINB**) distribution
+as implemented by the `zinbwave` package, 3) the truncated Gaussian
+Hurdle model as implemented by the `MAST` package 4) the zero-inflated
+Gaussian (**ZIG**) mixture model as implemented by the `metagenomeSeq`
+package, and 5) the Dirichlet-Multinomial (**DM**) distribution which is
+the multivariate extension of the beta-binomial (e.g. used by the
+`corncob` package).
+
+The relationships between the functions that can be used in this section
+are explained in the diagram in Figure \@ref(fig:figGOF). To help with
+the reading: green boxes represent the inputs or the outputs, red boxes
+are the methods and blue boxes are the main parameters of those method.
+
+```{r figGOF, eval=TRUE, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="Goodness of Fit diagram."}
+knitr::include_graphics("./GOF_structure.svg")
+```
+
+------------------------------------------------------------------------
+
+#### Fit parametric distributions
+
+We choose one of the two body sites in order to fit the models on a
+homogeneous group of samples. The same analysis can be performed on both
+body subsites, or in general, in each group of samples in your data.
+
+```{r, message=FALSE}
+# Subset Supragingival Plaque samples
+ps_sup <- phyloseq::subset_samples(ps_plaque_16S, HMP_BODY_SUBSITE == "Supragingival Plaque")
+# Remove taxa with all zeroes
+ps_sup <- phyloseq::filter_taxa(ps_sup, function(x) sum(x > 0) > 0, TRUE)
+```
+
+We use the `fitModels` function to fit all the available distributions
+on our dataset:
+
+```{r fitting}
+GOF_plaque_16S <- fitModels(
+    object = ps_sup,
+    models = c("NB", "ZINB", "DM", "ZIG", "HURDLE"),
+    scale_HURDLE = c("median"),
+    verbose = FALSE # TRUE is always suggested
+)
+```
+
+#### Comparing estimated and observed values
+
+For each taxon we can compare:
+
+-   the Mean Difference (**MD**) *i.e.* the difference between the
+    estimated mean and the observed mean abundance (log scale);
+
+-   the Zero Probability Difference (**ZPD**) *i.e.* the difference
+    between the probability to observe a zero and the observed
+    proportion of samples which have zero counts.
+
+Using the `plotMD` function we can study the results. What we are
+expecting to see are no systematic trends for the mean difference
+values.
+
+```{r plotGOFMD, fig.width=15, fig.height=4, fig.cap="MD plot. Mean-difference (MD) between the estimated and observed count values for each distribution."}
+plotMD(
+    data = GOF_plaque_16S,
+    difference = "MD",
+    split = TRUE
+)
+```
+
+From the Figure \@ref(fig:plotGOFMD) we can see that *DM* distribution
+overestimates the logarithm of the average counts for low values, while
+both *HURDLE_median* and *ZIG* distributions present an underestimation
+as the observed values increase. *NB* and *ZINB* distributions produce
+very similar estimated and observed values.
+
+```{r plotGOFZPD, fig.width=15, fig.height=4, fig.cap="ZPD plot. Mean-difference between the estimated probability to observe a zero and the observed proportion of zero values (ZPD)."}
+plotMD(
+    data = GOF_plaque_16S,
+    difference = "ZPD",
+    split = TRUE
+)
+```
+
+From the figure \@ref(fig:plotGOFZPD) we can see that *ZIG* and *NB*
+models underestimate the probability to observe a zero for sparse
+features, while the *HURDLE_median* model presents a perfect fit as the
+probability to observe a zero is the zero rate itself by construction.
+*DM* and *ZINB* models produce estimated values very similar to the
+observed ones.
+
+Overall, in this dataset, *NB* and *ZINB* distributions seems to work
+well both for the estimation of the average count value and the zero
+fraction value. *DM* model works well for estimating the probability to
+observe a zero.
+
+------------------------------------------------------------------------
+
+**Try it yourself**
+
+Try the `plotMD` function with *split = FALSE* to collapse all the
+smoothing lines on a single plot.
+
+As already mentioned, to summarize the goodness of fit, the Root Mean
+Squared Error (RMSE) metric is used. The summary statistics for the
+overall performance can be printed using the `plotRMSE` function.
+
+```{r plotGOFRMSE, fig.width=10, fig.height=7, fig.cap="RMSE plot. Root Mean Squared Errors (RMSE) for both the MD and ZPD values.", eval=TRUE}
+plot_grid(plotRMSE(GOF_plaque_16S, difference = "MD"),
+    plotRMSE(GOF_plaque_16S, difference = "ZPD"),
+    ncol = 2
+)
+```
+
+The lower the RMSE value, the better the goodness of fit of the model.
+
+------------------------------------------------------------------------
+
+### Differential Abundance detection methods
+
+Before starting, please remember that the data pre-processing, including
+QC analysis and filtering steps, are not topics of this workshop but in
+real life situations those steps precede the DA analysis and they are of
+extreme importance to obtain reliable results.
+
+A list of the available methods is presented below (Table
+\@ref(tab:availableMethodsTable)).
+
+```{r availableMethodsTable, echo=FALSE}
+available_methods <- read.csv(file = "./benchdamic_methods.csv", sep = ";")
+kableExtra::kable(
+    x = available_methods, 
+    caption = "DA methods available in benchdamic.",
+    col.names = c("Method (package)", "Short description", "Test",
+        "Normalization / Transformation", "Suggested input", "Output"), 
+    booktabs = TRUE) %>%
+    kable_styling(latex_options = "scale_down") %>%
+    row_spec(0, bold = TRUE, color = "black") %>%
+    column_spec(c(1,5,6), width = "3cm") %>% 
+    column_spec(2:4, width = "6cm") %>%
+    column_spec(1:6, color = "black")
+```
+
+### Type I Error Control
+
+**Assumption**: Many methods do not control the number of false
+discoveries.
+
+**Question**: Which are the differential abundance methods which can
+control the number of false positives in your data?
+
+------------------------------------------------------------------------
+
+**TIEC structure**
+
+Briefly, we randomly assign each sample to one of two experimental
+groups (using the `createMocks` function) and perform DA analysis (with
+the `runMocks` function) between these groups, repeating the process 10
+times (at least 1000 times are suggested). In this setting, the p-values
+of a perfect test should be uniformly distributed between 0 and 1 and
+the false positive rate (FPR or observed $\alpha$), which is the
+observed proportion of significant tests, should match the nominal value
+(e.g., $\alpha=0.05$). Finally, we will use the `createTIEC` function
+which produces the data.frame for plotting the results.
+
+The relationships between the functions used in this section are
+explained by the diagram in Figure \@ref(fig:figTIEC).
+
+```{r figTIEC, eval=TRUE, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="Type I Error Control diagram."}
+knitr::include_graphics("./TIEC_structure.svg")
+```
+
+------------------------------------------------------------------------
+
+1.  Using `createMocks` function we randomly assign a label ('grp1' or
+    'grp2') to the samples which should be homogeneous.
+
+2.  We run DA methods to find differences between the two groups using
+    `runMocks`.
+
+3.  we count the number of DA feature for each method, these are False
+    Positives by construction.
+
+4.  We repeat 1-3 many times (*N = 10*, but at least 1000 is suggested)
+    and we average the results using the `createTIEC` function.
+
+#### Create mock comparisons
+
+```{r createMocks}
+set.seed(123)
+my_mocks <- createMocks(
+    nsamples = phyloseq::nsamples(ps_sup),
+    N = 10
+) # At least N = 1000 is suggested
+```
+
+#### Set up normalizations and DA methods
+
+Firstly, by using the `setNormalizations` and `runNormalizations`
+methods, we add to the `phyloseq` object (or `TreeSummarizedExperiment`
+object) some scaling factors such as *TMM* from `edgeR`.
+
+```{r setNormalization}
+# Set the instructions
+my_normalizations <- setNormalizations(
+    fun = c("norm_edgeR"), 
+    method = c("TMM"))
+
+# Add the normalization/scaling factors to the object
+ps_sup <- runNormalizations(
+  normalization_list = my_normalizations, 
+  object = ps_sup, 
+  verbose = TRUE)
+```
+
+Some messages "Found more than one"phylo" class in cache..." could be
+shown after running the previous functions. They are caused by
+duplicated class names between 'phyloseq' and 'tidytree' packages and
+can be ignored.
+
+------------------------------------------------------------------------
+
+**Try it yourself**
+
+Normalization step can also be done manually, for example by using the
+`norm_edgeR()`, `norm_DESeq2()`, and `norm_CSS()` methods.
+
+```{r normalizationManual, eval=FALSE}
+ps_sup <- norm_edgeR(
+    object = ps_sup,
+    method = "TMM"
+)
+ps_sup <- norm_DESeq2(
+    object = ps_sup,
+    method = "poscounts"
+)
+ps_sup <- norm_CSS(
+    object = ps_sup,
+    method = "CSS"
+)
+
+# See the normalization/scaling factors inside the object
+head(phyloseq::sample_data(ps_sup)[, c("NF.TMM", "NF.poscounts", "NF.CSS")])
+```
+
+------------------------------------------------------------------------
+
+After the normalization/scaling factors have been added to the
+`phyloseq` or `TreeSummarizedExperiment` object, you could decide to
+filter rare taxa which do not carry much information. In this example a
+simple filter is applied to keep only features with a count in at least
+3 samples.
+
+```{r filter_rare_taxa, message=FALSE}
+ps_sup_filtered <- phyloseq::filter_taxa(
+    physeq = ps_sup, 
+    flist = function(x) sum(x > 0) >= 3, 
+    prune = TRUE)
+ps_sup_filtered
+```
+
+We set the instructions of a bunch of DA methods. In this workshop we
+will use:
+
+-   `limma` with *TMM* scaling factors;
+
+-   `ALDEx2` with *denom = "all"* data transformation performing the
+    wilcox test;
+
+Other methods and many combination of parameters are still possible but
+not included in this workshop.
+
+```{r set_Methods}
+my_limma <- set_limma(
+    pseudo_count = FALSE,
+    design = ~ group,
+    coef = "groupgrp2",
+    norm = "TMM",
+    weights_logical = FALSE,
+    expand = TRUE)
+
+my_ALDEx2 <- set_ALDEx2(
+    pseudo_count = FALSE,
+    design = "group",
+    mc.samples = 128,
+    test = "wilcox",
+    paired.test = FALSE, 
+    denom = "all", 
+    contrast = c("group", "grp2", "grp1"),
+    expand = TRUE)
+
+my_methods <- c(my_limma, my_ALDEx2)
+```
+
+#### Add a custom method
+
+Let's create a very simple custom DA method.
+
+I want to start from the log-transformed counts (adding 1 to all counts
+to avoid log(0)) and perform a t-test.
+
+If you want to try something else, feel free to do it, just remember to:
+
+-   include a *verbose = TRUE* (or *FALSE*) parameter to let the user
+    know what the method is doing;
+
+-   return a `pValMat` which contains the matrix of raw p-values and
+    adjusted p-values in *rawP* and *adjP* columns respectively;
+
+-   return a `statInfo` which contains the matrix of summary statistics
+    for each feature, such as the *logFC*, standard errors, test
+    statistics and so on;
+
+-   return a `name` which contains the complete name of the used method.
+
+```{r DA_custom}
+DA_custom <- function(
+    object, 
+    contrast = NULL, 
+    paired = FALSE, 
+    verbose = TRUE) 
+{
+    name <- "custom"  
+  
+    # Read the counts
+    counts_and_metadata <- get_counts_metadata(object)
+    counts <- counts_and_metadata[[1]]
+    metadata <- counts_and_metadata[[2]]
+    
+    # Log transform data
+    if(verbose){
+        message("Log transform the counts")
+    }
+    logcounts <- log1p(counts)
+    
+    # Check if contrast vector is present
+    # We need it to understand what to test
+    if(is.null(contrast)){
+        stop("Please supply a contrast vector")
+    }
+    
+    # Look for samples of the first and second group
+    group1 <- which(metadata[, contrast[1]] == contrast[2])
+    group2 <- which(metadata[, contrast[1]] == contrast[3])
+    
+    if(paired){
+        # Check if the number of samples in the groups is equal
+        if(length(group1) != length(group2)){
+            stop(method, "\n", "paired = TRUE but ", 
+                contrast[2], " and ", contrast[3], " have ", 
+                length(group1), " and ", length(group2), 
+                " samples respectively.")
+        }
+        if(verbose){
+            message("Performing the analysis on paired data")
+        }
+        # Update the name
+        name <- paste(name, ".", "paired", sep = "")
+    }
+    
+    if(verbose){
+        message("Performing t.tests")
+    }
+    # Perform the tests
+    statInfo_list <- apply(
+        X = logcounts, 
+        MARGIN = 1, 
+        FUN = function(feature){
+            if(!paired){
+                # Compute the average values for each group
+                avg_group1 <- mean(feature[group1]) 
+                avg_group2 <- mean(feature[group2])
+                # Compute the logFC
+                logFC <- avg_group1 - avg_group2
+            } else {
+                # Compute the average difference for each group
+                logFC <- mean(feature[group1] - feature[group2])
+            }
+            
+            # Perform the t-test
+            results <- stats::t.test(
+                x = feature[group1], 
+                y = feature[group2],
+                paired = paired)
+            # Prepare the output
+            out <- data.frame(
+                logFC,
+                "statistic" = results[["statistic"]], 
+                "pvalue" = results[["p.value"]],
+                "lowCI" = results[["conf.int"]][1],
+                "uppCI" = results[["conf.int"]][2])
+            return(out) 
+        }
+    )
+    
+    # Transform the list into a data.frame
+    statInfo <- plyr::ldply(statInfo_list)
+    
+    # Rename the columns
+    colnames(statInfo)[1] <- "taxon"
+    
+    # Create pValMat
+    padj <- stats::p.adjust(p = statInfo$pvalue, method = "BH")
+    pValMat <- data.frame("rawP" = statInfo[, "pvalue"], "adjP" = padj)
+    
+    # Add rownames
+    rownames(statInfo) <- rownames(pValMat) <- statInfo[, 1]
+    
+    # Return statInfo, pValMat and a name
+    return(list(
+        "pValMat" = pValMat, 
+        "statInfo" = statInfo,
+        "name" = name))
+} # END - function: DA_custom
+```
+
+We add it to the framework by creating a list containing one or more
+instances of the custom method with the desired combination of
+parameters:
+
+```{r customExampleInstance}
+my_custom_method <- list(
+    customMethod.1 = list(
+        method = "DA_custom", 
+        contrast = c("group", "grp2", "grp1"),
+        paired = FALSE)
+)
+```
+
+In this case, the "method" field, containing the name of the method to
+call, is mandatory.
+
+We put all the instructions together by concatenating them in a single
+object called "my_methods" and then we run them using the `runMocks`
+function.
+
+```{r customExampleRun}
+# Add the custom method instances to the others
+my_methods <- c(my_methods, my_custom_method)
+```
+
+```{r runMocks, message=FALSE}
+# Random grouping each time
+sup_mockDA <- runMocks(
+    mocks = my_mocks, 
+    method_list = my_methods,
+    object = ps_sup_filtered, 
+    verbose = FALSE)
+```
+
+If some warnings are reported set `verbose = TRUE` to obtain the method
+name and the mock comparison where the warnings occured.
+
+The structure of the output in this example is the following:
+
+-   *Comparison1* to *Comparison10* on the first level, which contains:
+
+    -   *Method1* to *Method3* output lists on the second level:
+
+        -   `pValMat` which contains the matrix of raw p-values and
+            adjusted p-values in *rawP* and *adjP* columns respectively;
+
+        -   `statInfo` which contains the matrix of summary statistics
+            for each feature, such as the *logFC*, standard errors, test
+            statistics and so on;
+
+        -   `name` which contains the complete name of the used method.
+
+#### Counting the False Positives
+
+We run the `createTIEC` function for counting the False Positives:
+
+```{r createTIEC, message=FALSE}
+TIEC_summary <- createTIEC(sup_mockDA)
+```
+
+We can plot the results by using the `plotFPR` function (Figure
+\@ref(fig:FPRplot)).
+
+```{r FPRplot, fig.cap="FPR plot. Boxplots of the proportion of raw p-values lower than the commonly used thresholds for the nominal $\\alpha$ (i.e. the False Positive Rate) for each DA method.", fig.width=8, fig.height=5}
+cols <- createColors(
+  variable = levels(TIEC_summary$df_FPR$Method))
+plotFPR(df_FPR = TIEC_summary$df_FPR, cols = cols)
+```
+
+The false positive rate (FPR or observed $\alpha$), which is the
+observed proportion of significant tests, should match the nominal value
+(red dotted lines) because all the findings are false positive by
+construction. In this example `ALDEx2.all.wilcox.unpaired` has a
+conservative behavior as it is below the thresholds. Instead,
+`limma.TMM` seems to be conservative for the lowest threshold and in
+line with the expectations for 0.05 and 0.1 thresholds.
+
+------------------------------------------------------------------------
+
+**Other graphical representations**
+
+`createTIEC` produces a list of 4 `data.frames` and a graphical
+representation is available for each of them:
+
+1.  `df_pval` is a 5 columns and *number_of_features x methods x
+    comparisons* rows `data.frame`. The four columns are called
+    *Comparison*, *Method*, *variable* (which contains the feature
+    names), *pval* and *padj*;
+
+2.  `df_FPR` is a 5 columns and *methods x comparisons* rows
+    `data.frame`. For each set of method and comparison, the proportion
+    of false positives, considering 3 threshold (0.01, 0.05, 0.1) are
+    reported;
+
+3.  `df_QQ` contains the average p-value for each theoretical quantile,
+    i.e. the coordinates to draw the QQ-plot for comparing the mean
+    observed p-value distribution across comparisons, with the
+    theoretical uniform distribution. Indeed, the observed p-values
+    should follow a uniform distribution under the null hypothesis of no
+    differential abundant features presence;
+
+4.  `df_KS` is a 5 columns and *methods x comparisons* rows
+    `data.frame`. For each set of method and comparison, the
+    Kolmogorov-Smirnov test statistics and pvalues are reported in *KS*
+    and *KS_pval* columns respectively.
+
+**QQ-Plot**
+
+The p-value distribution under the null hypothesis should be uniform.
+This is qualitatively summarized in the QQ-plot.
+
+Methods over the bisector show a conservative behavior, while methods
+below the bisector a liberal one:
+
+```{r QQplotsplit, fig.cap="QQ plot. Quantile-quantile plots from 0 to 1 for each DA method are displayed separately. Average curves are reported", fig.height=10, fig.width=10, eval=TRUE}
+plotQQ(df_QQ = TIEC_summary$df_QQ, zoom = c(0, 1), cols = cols, split = TRUE)
+```
+
+**Kolmogorov-Smirnov test**
+
+Departure from uniformity is quantitatively evaluated through the
+Kolmogorov-Smirnov test:
+
+```{r KSplot, fig.cap="KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods where the raw p-value distribution is compared with a uniform distribution.", eval=TRUE}
+plotKS(df_KS = TIEC_summary$df_KS, cols = cols)
+```
+
+High KS values indicates departure from the uniformity while low values
+indicates closeness. `ADLEx2.all.wilcox.unpaired`, which was very
+conservative has distribution of p-values far from uniformity. `custom`
+method instead has the lowest KS value.
+
+**Log distribution of p-values**
+
+Looking at the p-values' log-scale can also be informative. This is
+because behavior in the tail may be poor even when the overall p-value
+distribution is uniform, with a few unusually small p-values in an
+otherwise uniform distribution:
+
+```{r AveLogPplot, fig.cap="-log10(average p-value) plot ('average' refers to the average p-value computed for each quantile across mocks comparisons). Negative logarithm distribution of average p-values. Red-shaded vertical bars represent the 90, 95, and 99 percentiles for the negative log distribution of average p-values for each method. They should align with the dotted lines which represent the percentiles of the IDEAL distribution.", fig.width=7, fig.height=7, eval=TRUE}
+plotLogP(df_QQ = TIEC_summary$df_QQ, cols = cols)
+```
+
+The $-\log_{10}(p-value)$ IDEAL distribution is reported in red color as
+the first method. To highlight tail's behaviors, 3 percentiles (0.9,
+0.95, 0.99) are reported using red-shaded vertical segments for each
+method. If the method's distribution of negative log-transformed
+p-values or average p-values is still uniform in the 3 selected
+quantiles of the tail, the 3 red vertical segments will align to the
+respective dotted line. Usually, when a method has its red segments to
+the left of the IDEAL's (e.g. `ALDEx2.iqlr.wilcox.unpaired`) its
+behavior is conservative. Indeed, for those methods, little p-values are
+fewer than expected. On the contrary, methods with red segments to the
+right of the IDEAL's have a liberal behavior. Overall, `limma.TMM` has
+the best performances among the three methods.
+
+------------------------------------------------------------------------
+
+### Concordance
+
+**Assumption**: Applying different methods to the same data may produce
+different results.
+
+**Questions**: How much do the methods agree with each other? How much
+does a method agree with itself?
+
+------------------------------------------------------------------------
+
+**Concordance structure**
+
+Several functions are involved in the concordance analysis. First of
+all, the normalization methods need to be set up using the
+`setNormalizations` function. The differential abundance framework is
+set up by using `set_*` functions. Once all these instructions are set
+up, we can call the `runSplits` function. Finally, the
+`createConcordance` and `plotConcordance` functions are used to compute
+and plot the results.
+
+The relationships between the functions used in this section are
+explained by the diagram in Figure \@ref(fig:figconcordance).
+
+```{r figconcordance, eval=TRUE, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="Concordance diagram."}
+knitr::include_graphics("./concordance_structure.svg")
+```
+
+------------------------------------------------------------------------
+
+If we want to measure the ability of each method to produce replicable
+results:
+
+1.  We consider a dataset with two or more groups and split it by half
+    to obtain the Subset1 and Subset2 datasets using the `createSplits`
+    function.
+
+2.  We run DA methods on both subsets using the `runSplits` function.
+
+3.  We compute the Concordance At the Top metric (CAT) between the lists
+    of p-values to obtain the Between Method Concordances (BMC) and the
+    Within Method Concordances (WMC);
+
+4.  Repeat the 1-3 many times (*N = 10*, but at least 100 is suggested)
+    and we average the results using the `createConcordance` function.
+
+This time we consider the samples from both the supragingival and
+subgingival plaques.
+
+#### Split datasets
+
+We split the dataset considering the paired design.
+
+```{r createSplits, message=FALSE}
+# Set the HMP_BODY_SUBSITE and RSID variable as factors
+sample_data(ps_plaque_16S)$HMP_BODY_SUBSITE <- 
+    factor(sample_data(ps_plaque_16S)$HMP_BODY_SUBSITE)
+sample_data(ps_plaque_16S)$RSID <- 
+    factor(sample_data(ps_plaque_16S)$RSID)
+
+# Set a seed for reproducibility
+set.seed(123)
+my_splits <- createSplits(
+  object = ps_plaque_16S,
+  varName = "HMP_BODY_SUBSITE",
+  paired = "RSID",
+  balanced = TRUE,
+  N = 10
+) # At least 100 is suggested
+```
+
+#### Set up normalizations and DA methods
+
+For some of the methods implemented in this package it is possible to
+perform differential abundance testings for the repeated measurements
+experimental designs (e.g. by adding the subject ID in the model formula
+of `limma`).
+
+```{r set_Methods_noweights}
+my_limma <- set_limma(
+    design = ~ 1 + RSID + HMP_BODY_SUBSITE,
+    coef = "HMP_BODY_SUBSITESupragingival Plaque", 
+    norm = "TMM"
+)
+
+my_ALDEx2 <- set_ALDEx2(
+    pseudo_count = FALSE,
+    design = "HMP_BODY_SUBSITE",
+    mc.samples = 128,
+    test = "wilcox",
+    paired.test = TRUE, 
+    denom = "all", 
+    contrast = c(
+        "HMP_BODY_SUBSITE", 
+        "Supragingival Plaque", 
+        "Subgingival Plaque"))
+
+my_custom_method <- list(
+    customMethod.1 = list(
+        method = "DA_custom", 
+        contrast = c(
+            "HMP_BODY_SUBSITE", 
+            "Supragingival Plaque", 
+            "Subgingival Plaque"),
+        paired = TRUE)
+)
+
+my_methods <- c(
+    my_limma,  
+    my_ALDEx2, 
+    my_custom_method)
+```
+
+Similarly, to set the normalization methods, the `setNormalizations()`
+function can be used. In this case it has already been set up for the
+TIEC analysis.
+
+```{r info_normalizations}
+str(my_normalizations)
+```
+
+The `runSplits()` function generates the subsets and performs DA
+analysis on the features with at least 1 (min_counts \> 0) count in more
+than 2 samples (min_samples \> 2):
+
+```{r runSplits, message=FALSE}
+Plaque_16S_splitsDA <- runSplits(
+    split_list = my_splits, 
+    method_list = my_methods, 
+    normalization_list = my_normalizations, 
+    object = ps_plaque_16S, 
+    min_counts = 0, min_samples = 2, 
+    verbose = FALSE)
+```
+
+The structure of the output in this example is the following:
+
+-   *Subset1* and *Subset2* on the first level, which contains:
+
+    -   *Comparison1* to *Comparison10* output lists on the second
+        level:
+
+        -   results of the 3 methods on the third level: `limma` with
+            *TMM* scaling factors, `ALDEx2` with paired *wilcox* test
+            and denom equals to *all*,and `custom` for paired data. They
+            are organized as already described:
+
+            -   `pValMat` which contains the matrix of raw p-values and
+                adjusted p-values in *rawP* and *adjP* columns
+                respectively;
+
+            -   `statInfo` which contains the matrix of summary
+                statistics for each feature, such as the *logFC*,
+                standard errors, test statistics and so on;
+
+            -   `name` which contains the complete name of the used
+                method.
+
+#### Comparing the concordances
+
+For each pair of methods the concordance is computed by the
+`createConcordance()` function.
+
+```{r createConcordance}
+concordance <- createConcordance(
+    object = Plaque_16S_splitsDA
+)
+```
+
+------------------------------------------------------------------------
+
+**More details**
+
+The `createConcordance` function produces a long format `data.frame`
+object with several columns:
+
+-   *comparison* which indicates the comparison number;
+-   *n_features* which indicates the total number of taxa in the
+    comparison dataset;
+-   name of *method1*;
+-   name of *method2*;
+-   *rank*;
+-   *concordance* which is defined as the cardinality of the
+    intersection of the top *rank* elements of each list, divided by
+    *rank*, i.e., $\frac{L_{1:rank} \bigcap M_{1:rank}}{rank}$, where
+    *L* and *M* represent the lists of p-values of *method1* and
+    *method2* respectively. A noise value ($<10^{-10}$) is added to each
+    p-value (or statistic) in order to avoid duplicated values which can
+    not be ordered.
+
+**Concordances based on other statistics**
+
+The `createConcordance()` method is very flexible. In the example below
+the concordances are built using the log fold changes or other
+statistics instead of the p-values. To do so, it is necessary to know
+the column names generated by each differential abundance method in the
+`statInfo` matrix.
+
+Firstly, inspect the method order:
+
+```{r getNames, eval=FALSE}
+names(Plaque_16S_splitsDA$Subset1$Comparison1)
+```
+
+Then, look at the column names:
+
+```{r logFC_names, eval=FALSE}
+cat("limma.TMM", "\n")
+names(Plaque_16S_splitsDA$Subset1$Comparison1$limma.TMM$statInfo)
+cat("ALDEx2.all.wilcox.paired", "\n")
+names(Plaque_16S_splitsDA$Subset1$Comparison1$ALDEx2.all.wilcox.paired$
+    statInfo)
+cat("custom.paired", "\n")
+names(Plaque_16S_splitsDA$Subset1$Comparison1$custom.paired$statInfo)
+```
+
+All methods, except for ALDEx2, contain the log fold change values in
+the *logFC* column of `statInfo` matrix. Knowing this, the concordance
+`data.frame` can be built using:
+
+```{r alternativeConcordance, eval=TRUE}
+concordance_alternative <- createConcordance(
+    object = Plaque_16S_splitsDA,
+    slot = "statInfo",
+    colName = c("logFC", "effect", "logFC"),
+    type = c("logfc", "logfc", "logfc")
+)
+```
+
+------------------------------------------------------------------------
+
+Using the `plotConcordance` function the CAT values from rank 1 to 30
+are drawn. The area between the curve and the bisector is colored to
+highlight concordant methods (blue) and non-concordant ones (red).
+
+```{r plotConcordance, fig.cap="BMC and WMC plot. Between-method concordance (BMC) and within-method concordance (WMC) (main diagonal) averaged values from rank 1 to 30.", fig.width=9, fig.height=7}
+pC <- plotConcordance(
+    concordance = concordance, 
+    threshold = 30)
+
+cowplot::plot_grid(
+    plotlist = pC, 
+    ncol = 2, 
+    align = "h", 
+    axis = "tb",
+    rel_widths = c(1, 3))
+```
+
+`limma.TMM` and `custom` methods show the highest BMC values while
+`ALDEx2.iqlr.wilcox.paired` shows the highest WMC value.
+
+------------------------------------------------------------------------
+
+**More about WMC and BMC metrics**
+
+It is common that WMC values (in red rectangles) are lower than BMC
+ones. Indeed, BMC is computed between different methods on the same
+Subset, while WMC is computed for a single method between the results
+obtained in Subset1 and Subset2 (some taxa are dataset-specific).
+
+Mock comparisons and random splits allow to evaluate type I error and
+concordance. However, these analyses do not assess the correctness of
+the discoveries. Even the method with the highest WMC could nonetheless
+consistently identify false positive DA taxa.
+
+------------------------------------------------------------------------
+
+### Enrichment analysis
+
+**Assumption**: Previous analyses did not assess the correctness of the
+discoveries.
+
+**Question**: If some prior knowledge about your experiment is
+available, would the finding be coherent with that knowledge?
+
+------------------------------------------------------------------------
+
+**Enrichment analysis structure**
+
+After performing DA analysis on a dataset where some prior knowledge is
+given, `createEnrichment` and `createPositives` functions can be used to
+analyse the enrichment of DA features in specific levels of the prior
+knowledge variable.
+
+The relationships between the functions used in this section are
+explained by the diagram in Figure \@ref(fig:figenrichment).
+
+```{r figenrichment, eval=TRUE, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="Enrichment analysis diagram."}
+knitr::include_graphics("./enrichment_structure.svg")
+```
+
+------------------------------------------------------------------------
+
+-   We run DA methods to test a difference between two experimental
+    groups using the `runDA` function.
+
+-   We use the prior knowledge (if present) to check the correctness of
+    the findigs using the `createEnrichment` function
+
+#### *A priori* knowledge
+
+Here, we leveraged the peculiar environment of the gingival site:
+
+-   the **supragingival biofilm** is directly exposed to the open
+    atmosphere of the oral cavity, favoring the growth of aerobic
+    species.
+
+-   In the **subgingival biofilm**, the atmospheric conditions gradually
+    become strict anaerobic, favoring the growth of anaerobic species.
+
+From the comparison of the two sites, we thus expect to find an
+abundance of **aerobic microbes in the supragingival plaque** and of
+**anaerobic bacteria in the subgingival plaque**.
+
+Microbial metabolism data comes from a research article titled "Tobacco
+exposure associated with oral microbiota oxygen utilization in the New
+York City Health and Nutrition Examination Study" by [Beghini et al.
+(2019)](https://doi.org/10.1016/j.annepidem.2019.03.005). They can be
+loaded using `data("microbial_metabolism")`.
+
+```{r priorKnowledge}
+data("microbial_metabolism")
+head(microbial_metabolism)
+```
+
+We have to match each taxon of the phyloseq object to its type of
+metabolism.
+
+```{r exampleOfIntegration}
+# Extract genera from the phyloseq tax_table slot
+genera <- phyloseq::tax_table(ps_plaque_16S)[, "GENUS"]
+# Genera as rownames of microbial_metabolism data.frame
+rownames(microbial_metabolism) <- microbial_metabolism$Genus
+
+# Match OTUs to their metabolism
+priorInfo <- data.frame(genera, 
+    "Type" =  microbial_metabolism[genera, "Type"])
+
+# Populate the Unknowns
+unknown_metabolism <- is.na(priorInfo$Type)
+priorInfo[unknown_metabolism, "Type"] <- "Unknown"
+
+# Relabel 'F Anaerobic' to 'F_Anaerobic' to remove space
+priorInfo$Type <- factor(
+    priorInfo$Type, 
+    levels = c("Aerobic","Anaerobic","F Anaerobic","Unknown"), 
+    labels = c("Aerobic","Anaerobic","F_Anaerobic","Unknown"))
+
+# Add a more informative names column
+priorInfo[, "newNames"] <- paste0(rownames(priorInfo), "|",
+    priorInfo[, "GENUS"])
+```
+
+#### Set up normalization and DA methods
+
+Both the normalization/scaling factors and the DA methods' instructions
+are available since the dataset is the same used in the previous
+section.
+
+```{r, eval=TRUE}
+my_normalizations
+my_methods
+```
+
+To add the normalization/scaling factors to the object:
+
+```{r normalize_plaque, message=FALSE}
+ps_plaque_16S <- runNormalizations(
+    normalization_list = my_normalizations, 
+    object = ps_plaque_16S)
+```
+
+A simple filter to remove rare taxa:
+
+```{r filter_plauque, message=FALSE}
+ps_plaque_16S <- phyloseq::filter_taxa(physeq = ps_plaque_16S, 
+    flist = function(x) sum(x > 0) >= 3, prune = TRUE)
+ps_plaque_16S
+```
+
+Perform DA analysis:
+
+```{r runDA_enrichment, message=FALSE}
+Plaque_16S_DA <- runDA(
+    method_list = my_methods, 
+    object = ps_plaque_16S, 
+    verbose = FALSE)
+```
+
+#### Testing the enrichment
+
+We use the `createEnrichment()` with the direction parameter:
+
+```{r createEnrichment}
+enrichment <- createEnrichment(
+    object = Plaque_16S_DA, # DA results
+    priorKnowledge = priorInfo, # Pior knowledge
+    enrichmentCol = "Type", # name of the interesting column 
+    namesCol = "newNames", # name of the new taxa names (opt)
+    slot = "pValMat", # Which output slot for DA detection
+    colName = "adjP", # Which column of the output slot
+    type = "pvalue", # What kind of measure it is
+    # Optional, gives the sign of DA
+    direction = c( # name of the colums in statInfo matrix
+        "logFC", # limma 
+        "effect", # ALDEx2
+        "logFC"), # custom
+    threshold_pvalue = 0.1, # adjP threshold for DA detection
+    threshold_logfc = 0, # logFC threshold for DA detection
+    top = NULL, # select only the top features (opt)
+    alternative = "greater", # alternative test enrichment
+    verbose = TRUE
+)
+```
+
+------------------------------------------------------------------------
+
+**More about the enrichment**
+
+The produced *enrichment* object consists in a list of elements as long
+as the number of tested methods:
+
+-   the `data` slot contains information for each feature. P-values,
+    adjusted p-values (or other statistics) in *stats* column, log fold
+    changes (or other statistics, if specified) in *direction* column,
+    differential abundance information in the *DA* column (according to
+    the thresholds), the variable of interest for the enrichment
+    analysis, and the name of the feature in the *feature* column;
+
+-   in the `tables` slot a maximum of *2 x (levels of enrichment
+    variable)* contingency tables (*2x2*) are present;
+
+-   in the `tests` slot, the list of Fisher exact tests produced by the
+    `fisher.test()` function are saved for each contingency table;
+
+-   in the `summaries` slot, the first elements of the contingency
+    tables and the respective p-values are collected for graphical
+    purposes.
+
+Considering one of the methods, `limma.TMM`, we obtain 8 contingency
+tables. Both UP Abundant and DOWN Abundant taxa are found and the
+enrichment variable has Aerobic, Anaerobic, F_Anaerobic, and Unknown
+levels. For each level, we can build 2 contingency tables: one for DOWN
+Abundant vs non-DOWN Abundant features and one for UP Abundant vs non-UP
+Abundant features. The enrichment is tested using Fisher exact test. The
+`plotContingency()` function summarize all these information:
+
+```{r plotContingency, fig.cap="Contingency tables plot. Contingency tables for Aerobic and Anaerobic taxa found as differentially abundant by DESeq2.poscounts DA method. Fisher exact test has been performed on each contingency table. If the enrichment is signficantly present, the correspondent cell will be highlighted.", eval=TRUE}
+plotContingency(enrichment = enrichment, 
+    levels_to_plot = c("Aerobic", "Anaerobic"), 
+    method = "limma.TMM")
+```
+
+------------------------------------------------------------------------
+
+Using the `plotEnrichment()` function we can see the enrichment analysis
+results (Figure \@ref(fig:plotEnrichment)).
+
+```{r plotEnrichment, fig.width=7, fig.height=7, fig.cap="Enrichment plot. Number of differentially abundant features, colored by aerobic or anaerobic metabolism, and directed according to differential abundance direction (UP or DOWN abundant)."}
+plotEnrichment(enrichment = enrichment, enrichmentCol = "Type", 
+    levels_to_plot = c("Aerobic", "Anaerobic"))
+```
+
+Since "Subgingival Plaque" is the reference level for each method, the
+coefficients extracted from the methods are referred to the
+"Supragingival Plaque" class. `limma.TMM` and `ALDEx2.all.wilcox.paired`
+find, as expected, a statistically significant ($0.01 < p \le 0.1$)
+amount of DOWN Abundant Anaerobic features and UP Abundant Aerobic
+features in Supragingival Plaque.
+
+To investigate the DA features, the `plotMutualFindings()` function can
+be used to extract only features which are mutually found as DA by more
+than 1 method (Figure \@ref(fig:plotMutualFindings)).
+
+```{r plotMutualFindings, fig.width=6, fig.height=6, fig.cap="Mutual Findings plot. Number of differentially abundant features mutually found by 1 or more methods, colored by the differential abundance direction and separated by aerobic and anaerobic metabolism."}
+plotMutualFindings(enrichment, enrichmentCol = "Type", 
+    levels_to_plot = c("Aerobic", "Anaerobic"), n_methods = 1)
+```
+
+In this example (Figure \@ref(fig:plotMutualFindings)), many Anaerobic
+genera and 3 Aerobic genera are found as DA by more than 1 method
+simultaneously. Among them *Prevotella*, *Treponema*, *Fusobacterium*,
+*Catonella*, and *Dialister* genera are found as DOWN Abundant in
+Supragingival Plaque by all methods. While the *Actinomyces* genus is
+considered UP Abundant in Supragingival Plaque .
+
+------------------------------------------------------------------------
+
+**True and False Positives**
+
+To evaluate the overall performances we can also study a statistic based
+on the difference between putative True Positives (TP) and the putative
+False Positives (FP). To build the matrix to plot, the
+`createPositives()` can be used. In details, the correctness of the DA
+features is evaluated comparing the direction of the top ranked features
+to the expected direction supplied by the user in the *TP* and *FP*
+lists. The procedure is performed for several thresholds of *top*
+parameter in order to observe a trend, if present.
+
+```{r createPositives, eval=TRUE}
+positives <- createPositives(
+    object = Plaque_16S_DA, 
+    priorKnowledge = priorInfo, 
+    enrichmentCol = "Type",
+    namesCol = "newNames", 
+    slot = "pValMat", 
+    colName = "adjP", 
+    type = "pvalue",
+    direction = c(
+        "logFC", # limma
+        "effect", # ALDEx2
+        "logFC"), # custom
+    threshold_pvalue = 0.1,
+    threshold_logfc = 0,
+    top = seq.int(from = 0, to = 20, by = 2),
+    alternative = "greater",
+    verbose = FALSE,
+    TP = list(c("DOWN Abundant", "Anaerobic"), c("UP Abundant", "Aerobic")),
+    FP = list(c("DOWN Abundant", "Aerobic"), c("UP Abundant", "Anaerobic"))
+)
+```
+
+Finally, the `plotPositives()` function can be used to summarize the
+methods' performances (Figure \@ref(fig:plotPositives)). Higher values
+usually represents better performances.
+
+```{r plotPositives, fig.cap="TP, FP differences plot. Differences between the number of True Positives and False Positives for several thresholds of the top ranked raw p-values (the top 5 lowest p-values, the top 10, 15, ..., 50) for each method.", eval=TRUE}
+plotPositives(positives)
+```
+
+Under the working assumption (Aerobic Up Abundant in Supragingival and
+Anaerobic Down Abundant in Supraginval) `ALDEx2.all.wilcox.paired`
+confirms itself as a conservative method. `limma.TMM`, along with the
+`custom` method, are able to reach the highest values of the statistic
+locating themselves on the upper part of the Figure
+\@ref(fig:plotPositives). This means that their findings are in line
+with the *a priori* knowledge supplied by the user, however we are
+considering a toy example with only 58 features.
+
+------------------------------------------------------------------------
+
+### Conclusions
+
+In our dataset:
+
+-   *NB*, *ZINB*, and *DM* models seem to have a good fit when used for
+    estimating the average counts and the proportion of zero
+
+    -   Methods based on those parametric distributions should work well
+
+-   `ALDEx2.all.wilcox.unpaired` had a conservative behaviour when
+    evaluating the proportion of False Positives
+
+    -   If you want to be sure about your findings, using a conservative
+        method could be a good choice
+
+-   `limma.TMM` results were concordant with those of the `custom`
+    method. `ALDEx2.all.wilcox.paired` had the highest WMC values
+
+-   both `limma.TMM` and `ALDEx2.all.wilcox.paired` found an enriched
+    amount of Up Abundant Aerobic taxa and Down Abundant Anaerobic taxa
+    in Supragingival Plaque.
+
+    -   We can trust the findings of both methods
+
+    -   We can even trust more the mutual findings
+
+    -   If the assumptions are correct ;)
