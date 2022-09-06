@@ -3,10 +3,9 @@ title: 'An introduction to benchdamic - EuroBioC2022 workshop'
 author: Matteo Calgaro^[mcalgaro93@gmail.com]
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{An introduction to benchdamic - EuroBioc2022 workshop}
+  %\VignetteIndexEntry{An introduction to benchdamic - EuroBioC2022 workshop}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-bibliography: bib_intro.json
 editor_options: 
   markdown: 
     wrap: 72
@@ -255,7 +254,8 @@ Squared Error (RMSE) metric is used. The summary statistics for the
 overall performance can be printed using the `plotRMSE` function.
 
 ```{r plotGOFRMSE, fig.width=10, fig.height=7, fig.cap="RMSE plot. Root Mean Squared Errors (RMSE) for both the MD and ZPD values.", eval=TRUE}
-plot_grid(plotRMSE(GOF_plaque_16S, difference = "MD"),
+plot_grid(
+    plotRMSE(GOF_plaque_16S, difference = "MD"),
     plotRMSE(GOF_plaque_16S, difference = "ZPD"),
     ncol = 2
 )
