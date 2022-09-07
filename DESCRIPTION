@@ -31,4 +31,4 @@ Remotes:
 URL: https://mcalgaro93.github.io/benchdamicWorkshop/
 BugReports: https://github.com/mcalgaro93/benchdamicWorkshop/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: mcalgaro93/benchdamicWorkshop
+DockerImage: mcalgaro93/benchdamicworkshop
