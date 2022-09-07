@@ -26,6 +26,7 @@ Suggests:
     knitr,
     rmarkdown,
     pkgdown
+Remotes: mcalgaro93/benchdamic
 URL: https://mcalgaro93.github.io/benchdamicWorkshop/
 BugReports: https://github.com/mcalgaro93/benchdamicWorkshop/issues/new/choose
 VignetteBuilder: knitr
