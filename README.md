@@ -40,10 +40,8 @@ To be able to follow along with this workshop, we have created a
 Docker installation. In order to access this, you need to
 first install [Docker](https://docs.docker.com/engine/install/) on
 your own computer. Once you have done that, you can then load the
-Docker container for this workshop by starting Docker.
-
-
-## To use the container
+Docker container for this workshop by starting Docker and writing the 
+following line in your terminal:
 
 ```
 docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 ghcr.io/mcalgaro93/benchdamicworkshop
@@ -57,3 +55,5 @@ Once running, navigate to http://localhost:8787/ and then login with rstudio:you
 
 Then please open the file 'vignettes/introduction_to_benchdamic.Rmd' to start 
 the workshop.
+
+You can also see the workshop material at https://mcalgaro93.github.io/benchdamicWorkshop/.
