@@ -104,15 +104,12 @@
 <div class="section level2">
 <h2 id="preparation">Preparation<a class="anchor" aria-label="anchor" href="#preparation"></a>
 </h2>
-<p>To be able to follow along with this workshop, we have created a Docker installation. In order to access this, you need to first install <a href="https://docs.docker.com/engine/install/" class="external-link">Docker</a> on your own computer. Once you have done that, you can then load the Docker container for this workshop by starting Docker.</p>
-</div>
-<div class="section level2">
-<h2 id="to-use-the-container">To use the container<a class="anchor" aria-label="anchor" href="#to-use-the-container"></a>
-</h2>
+<p>To be able to follow along with this workshop, we have created a Docker installation. In order to access this, you need to first install <a href="https://docs.docker.com/engine/install/" class="external-link">Docker</a> on your own computer. Once you have done that, you can then load the Docker container for this workshop by starting Docker and writing the following line in your terminal:</p>
 <pre><code>docker run -e PASSWORD=&lt;choose_a_password_for_rstudio&gt; -p 8787:8787 ghcr.io/mcalgaro93/benchdamicworkshop</code></pre>
 <p>You can choose any password for rstudio - that’s what you will use to log in. It will take some time for the Docker to be downloaded and started, so you might consider doing this ahead of time.</p>
 <p>Once running, navigate to <a href="http://localhost:8787/" class="external-link uri">http://localhost:8787/</a> and then login with rstudio:yourchosenpassword.</p>
 <p>Then please open the file ‘vignettes/introduction_to_benchdamic.Rmd’ to start the workshop.</p>
+<p>You can also see the workshop material at <a href="https://mcalgaro93.github.io/benchdamicWorkshop/" class="uri">https://mcalgaro93.github.io/benchdamicWorkshop/</a>.</p>
 </div>
 </div>
 
