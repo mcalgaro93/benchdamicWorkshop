@@ -231,7 +231,7 @@ outputs</p></li>
 <ul>
 <li><p>30 male subjects from the Human Microbiome Project
 (HMP);</p></li>
-<li><p>Samples collected from subgingival plaque and supragingival
+<li><p>samples collected from subgingival plaque and supragingival
 plaque for each subject (a total of 60 samples);</p></li>
 <li><p>all features having the same genus-level taxonomic classification
 have been collapsed together (a total of 88 taxa corresponding to 88
@@ -255,6 +255,7 @@ methods are based on parametric distributions.</p>
 that can fit both the proportion of zeros and the counts in your
 data?</p>
 <hr>
+<blockquote>
 <p><strong>GOF structure</strong></p>
 <p>Several distributions are available in <code>benchdamic</code>: 1)
 the negative binomial (<strong>NB</strong>) distribution as proposed by
@@ -268,13 +269,13 @@ Dirichlet-Multinomial (<strong>DM</strong>) distribution which is the
 multivariate extension of the beta-binomial (e.g. used by the
 <code>corncob</code> package).</p>
 <p>The relationships between the functions that can be used in this
-section are explained in the diagram in Figure @ref(fig:figGOF). To help
-with the reading: green boxes represent the inputs or the outputs, red
-boxes are the methods and blue boxes are the main parameters of those
-method.</p>
+section are explained in the next diagram. To help with the reading:
+green boxes represent the inputs or the outputs, red boxes are the
+methods and blue boxes are the main parameters of those method.</p>
 <div class="figure">
-<img src="GOF_structure.svg" alt=""><p class="caption">Goodness of Fit diagram.</p>
+<img src="GOF_structure.svg" alt=""><p class="caption">Goodness of Fit diagram</p>
 </div>
+</blockquote>
 <hr>
 <div class="section level5">
 <h5 id="fit-parametric-distributions">Fit parametric distributions<a class="anchor" aria-label="anchor" href="#fit-parametric-distributions"></a>
@@ -326,12 +327,12 @@ MD plot. Mean-difference (MD) between the estimated and observed count
 values for each distribution.
 </p>
 </div>
-<p>From the Figure @ref(fig:plotGOFMD) we can see that <em>DM</em>
-distribution overestimates the logarithm of the average counts for low
-values, while both <em>HURDLE_median</em> and <em>ZIG</em> distributions
-present an underestimation as the observed values increase. <em>NB</em>
-and <em>ZINB</em> distributions produce very similar estimated and
-observed values.</p>
+<p>From the figure above we can see that <em>DM</em> distribution
+overestimates the logarithm of the average counts for low values, while
+both <em>HURDLE_median</em> and <em>ZIG</em> distributions present an
+underestimation as the observed values increase. <em>NB</em> and
+<em>ZINB</em> distributions produce very similar estimated and observed
+values.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotMD.html" class="external-link">plotMD</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">GOF_plaque_16S</span>,</span>
@@ -344,17 +345,18 @@ ZPD plot. Mean-difference between the estimated probability to observe a
 zero and the observed proportion of zero values (ZPD).
 </p>
 </div>
-<p>From the figure @ref(fig:plotGOFZPD) we can see that <em>ZIG</em> and
-<em>NB</em> models underestimate the probability to observe a zero for
-sparse features, while the <em>HURDLE_median</em> model presents a
-perfect fit as the probability to observe a zero is the zero rate itself
-by construction. <em>DM</em> and <em>ZINB</em> models produce estimated
+<p>From the figure above we can see that <em>ZIG</em> and <em>NB</em>
+models underestimate the probability to observe a zero for sparse
+features, while the <em>HURDLE_median</em> model presents a perfect fit
+as the probability to observe a zero is the zero rate itself by
+construction. <em>DM</em> and <em>ZINB</em> models produce estimated
 values very similar to the observed ones.</p>
 <p>Overall, in this dataset, <em>NB</em> and <em>ZINB</em> distributions
 seems to work well both for the estimation of the average count value
 and the zero fraction value. <em>DM</em> model works well for estimating
 the probability to observe a zero.</p>
 <hr>
+<blockquote>
 <p><strong>Try it yourself</strong></p>
 <p>Try the <code>plotMD</code> function with <em>split = FALSE</em> to
 collapse all the smoothing lines on a single plot.</p>
@@ -376,6 +378,7 @@ values.
 </div>
 <p>The lower the RMSE value, the better the goodness of fit of the
 model.</p>
+</blockquote>
 <hr>
 </div>
 </div>
@@ -386,8 +389,7 @@ model.</p>
 including QC analysis and filtering steps, are not topics of this
 workshop but in real life situations those steps precede the DA analysis
 and they are of extreme importance to obtain reliable results.</p>
-<p>A list of the available methods is presented below (Table
-@ref(tab:availableMethodsTable)).</p>
+<p>A list of the available methods is presented below:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <caption>
 DA methods available in benchdamic.
@@ -681,6 +683,7 @@ of false discoveries.</p>
 methods which can control the number of false positives in your
 data?</p>
 <hr>
+<blockquote>
 <p><strong>TIEC structure</strong></p>
 <p>Briefly, we randomly assign each sample to one of two experimental
 groups (using the <code>createMocks</code> function) and perform DA
@@ -694,10 +697,11 @@ proportion of significant tests, should match the nominal value (e.g.,
 the <code>createTIEC</code> function which produces the data.frame for
 plotting the results.</p>
 <p>The relationships between the functions used in this section are
-explained by the diagram in Figure @ref(fig:figTIEC).</p>
+explained by the next diagram.</p>
 <div class="figure">
 <img src="TIEC_structure.svg" alt=""><p class="caption">Type I Error Control diagram.</p>
 </div>
+</blockquote>
 <hr>
 <ol style="list-style-type: decimal">
 <li><p>Using <code>createMocks</code> function we randomly assign a
@@ -756,6 +760,7 @@ shown after running the previous functions. They are caused by
 duplicated class names between ‘phyloseq’ and ‘tidytree’ packages and
 can be ignored.</p>
 <hr>
+<blockquote>
 <p><strong>Try it yourself</strong></p>
 <p>Normalization step can also be done manually, for example by using
 the <code><a href="https://rdrr.io/pkg/benchdamic/man/norm_edgeR.html" class="external-link">norm_edgeR()</a></code>, <code><a href="https://rdrr.io/pkg/benchdamic/man/norm_DESeq2.html" class="external-link">norm_DESeq2()</a></code>, and
@@ -776,6 +781,7 @@ the <code><a href="https://rdrr.io/pkg/benchdamic/man/norm_edgeR.html" class="ex
 <span></span>
 <span><span class="co"># See the normalization/scaling factors inside the object</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">phyloseq</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_data-methods.html" class="external-link">sample_data</a></span><span class="op">(</span><span class="va">ps_sup</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NF.TMM"</span>, <span class="st">"NF.poscounts"</span>, <span class="st">"NF.CSS"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+</blockquote>
 <hr>
 <p>After the normalization/scaling factors have been added to the
 <code>phyloseq</code> or <code>TreeSummarizedExperiment</code> object,
@@ -1001,8 +1007,8 @@ method.</p></li>
 Positives:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TIEC_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createTIEC.html" class="external-link">createTIEC</a></span><span class="op">(</span><span class="va">sup_mockDA</span><span class="op">)</span></span></code></pre></div>
-<p>We can plot the results by using the <code>plotFPR</code> function
-(Figure @ref(fig:FPRplot)).</p>
+<p>We can plot the results by using the <code>plotFPR</code>
+function.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createColors.html" class="external-link">createColors</a></span><span class="op">(</span></span>
 <span>  variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_FPR</span><span class="op">$</span><span class="va">Method</span><span class="op">)</span><span class="op">)</span></span>
@@ -1023,6 +1029,7 @@ behavior as it is below the thresholds. Instead, <code>limma.TMM</code>
 seems to be conservative for the lowest threshold and in line with the
 expectations for 0.05 and 0.1 thresholds.</p>
 <hr>
+<blockquote>
 <p><strong>Other graphical representations</strong></p>
 <p><code>createTIEC</code> produces a list of 4 <code>data.frames</code>
 and a graphical representation is available for each of them:</p>
@@ -1067,7 +1074,7 @@ Kolmogorov-Smirnov test:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotKS.html" class="external-link">plotKS</a></span><span class="op">(</span>df_KS <span class="op">=</span> <span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_KS</span>, cols <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_to_benchdamic_files/figure-html/KSplot-1.png" alt="KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods where the raw p-value distribution is compared with a uniform distribution." width="700"><p class="caption">
+<img src="introduction_to_benchdamic_files/figure-html/KSplot-1.png" alt="KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods where the raw p-value distribution is compared with a uniform distribution." width="672"><p class="caption">
 KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods
 where the raw p-value distribution is compared with a uniform
 distribution.
@@ -1108,6 +1115,7 @@ conservative. Indeed, for those methods, little p-values are fewer than
 expected. On the contrary, methods with red segments to the right of the
 IDEAL’s have a liberal behavior. Overall, <code>limma.TMM</code> has the
 best performances among the three methods.</p>
+</blockquote>
 <hr>
 </div>
 </div>
@@ -1119,6 +1127,7 @@ data may produce different results.</p>
 <p><strong>Questions</strong>: How much do the methods agree with each
 other? How much does a method agree with itself?</p>
 <hr>
+<blockquote>
 <p><strong>Concordance structure</strong></p>
 <p>Several functions are involved in the concordance analysis. First of
 all, the normalization methods need to be set up using the
@@ -1129,10 +1138,11 @@ function. Finally, the <code>createConcordance</code> and
 <code>plotConcordance</code> functions are used to compute and plot the
 results.</p>
 <p>The relationships between the functions used in this section are
-explained by the diagram in Figure @ref(fig:figconcordance).</p>
+explained by the next diagram.</p>
 <div class="figure">
-<img src="concordance_structure.svg" alt=""><p class="caption">Concordance diagram.</p>
+<img src="concordance_structure.svg" alt=""><p class="caption">Concordance analysis diagram.</p>
 </div>
+</blockquote>
 <hr>
 <p>If we want to measure the ability of each method to produce
 replicable results:</p>
@@ -1245,7 +1255,7 @@ second level:</p>
 <li>
 <p>results of the 3 methods on the third level: <code>limma</code>
 with <em>TMM</em> scaling factors, <code>ALDEx2</code> with paired
-<em>wilcox</em> test and denom equals to <em>all</em>,and
+<em>wilcox</em> test and denom equals to <em>all</em>, and
 <code>custom</code> for paired data. They are organized as already
 described:</p>
 <ul>
@@ -1275,6 +1285,7 @@ method.</p></li>
 <span>    object <span class="op">=</span> <span class="va">Plaque_16S_splitsDA</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <hr>
+<blockquote>
 <p><strong>More details</strong></p>
 <p>The <code>createConcordance</code> function produces a long format
 <code>data.frame</code> object with several columns:</p>
@@ -1326,6 +1337,7 @@ the concordance <code>data.frame</code> can be built using:</p>
 <span>    colName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"logFC"</span>, <span class="st">"effect"</span>, <span class="st">"logFC"</span><span class="op">)</span>,</span>
 <span>    type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"logfc"</span>, <span class="st">"logfc"</span>, <span class="st">"logfc"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</blockquote>
 <hr>
 <p>Using the <code>plotConcordance</code> function the CAT values from
 rank 1 to 30 are drawn. The area between the curve and the bisector is
@@ -1343,7 +1355,7 @@ colored to highlight concordant methods (blue) and non-concordant ones
 <span>    axis <span class="op">=</span> <span class="st">"tb"</span>,</span>
 <span>    rel_widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_to_benchdamic_files/figure-html/plotConcordance-1.png" alt="BMC and WMC plot. Between-method concordance (BMC) and within-method concordance (WMC) (main diagonal) averaged values from rank 1 to 30." width="864"><p class="caption">
+<img src="introduction_to_benchdamic_files/figure-html/plotConcordance-1.png" alt="BMC and WMC plot. Between-method concordance (BMC) and within-method concordance (WMC) (main diagonal) averaged values from rank 1 to 30." width="768"><p class="caption">
 BMC and WMC plot. Between-method concordance (BMC) and within-method
 concordance (WMC) (main diagonal) averaged values from rank 1 to 30.
 </p>
@@ -1352,6 +1364,7 @@ concordance (WMC) (main diagonal) averaged values from rank 1 to 30.
 highest BMC values while <code>ALDEx2.iqlr.wilcox.paired</code> shows
 the highest WMC value.</p>
 <hr>
+<blockquote>
 <p><strong>More about WMC and BMC metrics</strong></p>
 <p>It is common that WMC values (in red rectangles) are lower than BMC
 ones. Indeed, BMC is computed between different methods on the same
@@ -1361,6 +1374,7 @@ obtained in Subset1 and Subset2 (some taxa are dataset-specific).</p>
 concordance. However, these analyses do not assess the correctness of
 the discoveries. Even the method with the highest WMC could nonetheless
 consistently identify false positive DA taxa.</p>
+</blockquote>
 <hr>
 </div>
 </div>
@@ -1373,16 +1387,18 @@ correctness of the discoveries.</p>
 experiment is available, would the finding be coherent with that
 knowledge?</p>
 <hr>
+<blockquote>
 <p><strong>Enrichment analysis structure</strong></p>
 <p>After performing DA analysis on a dataset where some prior knowledge
 is given, <code>createEnrichment</code> and <code>createPositives</code>
 functions can be used to analyse the enrichment of DA features in
 specific levels of the prior knowledge variable.</p>
 <p>The relationships between the functions used in this section are
-explained by the diagram in Figure @ref(fig:figenrichment).</p>
+explained by the next diagram.</p>
 <div class="figure">
 <img src="enrichment_structure.svg" alt=""><p class="caption">Enrichment analysis diagram.</p>
 </div>
+</blockquote>
 <hr>
 <ul>
 <li><p>We run DA methods to test a difference between two experimental
@@ -1587,6 +1603,7 @@ parameter:</p>
 <span><span class="co">#&gt;  * 'logFC' column, as direction, of statInfo matrix.</span></span>
 <span><span class="co">#&gt;  * DA: , adjP&lt;=0.1, |logFC|&gt;=0</span></span></code></pre></div>
 <hr>
+<blockquote>
 <p><strong>More about the enrichment</strong></p>
 <p>The produced <em>enrichment</em> object consists in a list of
 elements as long as the number of tested methods:</p>
@@ -1630,14 +1647,15 @@ enrichment is signficantly present, the correspondent cell will be
 highlighted.
 </p>
 </div>
+</blockquote>
 <hr>
 <p>Using the <code><a href="https://rdrr.io/pkg/benchdamic/man/plotEnrichment.html" class="external-link">plotEnrichment()</a></code> function we can see the
-enrichment analysis results (Figure @ref(fig:plotEnrichment)).</p>
+enrichment analysis results.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotEnrichment.html" class="external-link">plotEnrichment</a></span><span class="op">(</span>enrichment <span class="op">=</span> <span class="va">enrichment</span>, enrichmentCol <span class="op">=</span> <span class="st">"Type"</span>, </span>
 <span>    levels_to_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aerobic"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_to_benchdamic_files/figure-html/plotEnrichment-1.png" alt="Enrichment plot. Number of differentially abundant features, colored by aerobic or anaerobic metabolism, and directed according to differential abundance direction (UP or DOWN abundant)." width="672"><p class="caption">
+<img src="introduction_to_benchdamic_files/figure-html/plotEnrichment-1.png" alt="Enrichment plot. Number of differentially abundant features, colored by aerobic or anaerobic metabolism, and directed according to differential abundance direction (UP or DOWN abundant)." width="480"><p class="caption">
 Enrichment plot. Number of differentially abundant features, colored by
 aerobic or anaerobic metabolism, and directed according to differential
 abundance direction (UP or DOWN abundant).
@@ -1652,7 +1670,7 @@ amount of DOWN Abundant Anaerobic features and UP Abundant Aerobic
 features in Supragingival Plaque.</p>
 <p>To investigate the DA features, the <code><a href="https://rdrr.io/pkg/benchdamic/man/plotMutualFindings.html" class="external-link">plotMutualFindings()</a></code>
 function can be used to extract only features which are mutually found
-as DA by more than 1 method (Figure @ref(fig:plotMutualFindings)).</p>
+as DA by more than 1 method.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotMutualFindings.html" class="external-link">plotMutualFindings</a></span><span class="op">(</span><span class="va">enrichment</span>, enrichmentCol <span class="op">=</span> <span class="st">"Type"</span>, </span>
 <span>    levels_to_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aerobic"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span>, n_methods <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
@@ -1663,14 +1681,15 @@ mutually found by 1 or more methods, colored by the differential
 abundance direction and separated by aerobic and anaerobic metabolism.
 </p>
 </div>
-<p>In this example (Figure @ref(fig:plotMutualFindings)), many Anaerobic
-genera and 3 Aerobic genera are found as DA by more than 1 method
-simultaneously. Among them <em>Prevotella</em>, <em>Treponema</em>,
-<em>Fusobacterium</em>, <em>Catonella</em>, and <em>Dialister</em>
-genera are found as DOWN Abundant in Supragingival Plaque by all
-methods. While the <em>Actinomyces</em> genus is considered UP Abundant
-in Supragingival Plaque .</p>
+<p>In this example, many Anaerobic genera and 3 Aerobic genera are found
+as DA by more than 1 method simultaneously. Among them
+<em>Prevotella</em>, <em>Treponema</em>, <em>Fusobacterium</em>,
+<em>Catonella</em>, and <em>Dialister</em> genera are found as DOWN
+Abundant in Supragingival Plaque by all methods. While the
+<em>Actinomyces</em> genus is considered UP Abundant in Supragingival
+Plaque.</p>
 <hr>
+<blockquote>
 <p><strong>True and False Positives</strong></p>
 <p>To evaluate the overall performances we can also study a statistic
 based on the difference between putative True Positives (TP) and the
@@ -1703,8 +1722,8 @@ trend, if present.</p>
 <span>    FP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DOWN Abundant"</span>, <span class="st">"Aerobic"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UP Abundant"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Finally, the <code><a href="https://rdrr.io/pkg/benchdamic/man/plotPositives.html" class="external-link">plotPositives()</a></code> function can be used to
-summarize the methods’ performances (Figure @ref(fig:plotPositives)).
-Higher values usually represents better performances.</p>
+summarize the methods’ performances. Higher values usually represents
+better performances.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotPositives.html" class="external-link">plotPositives</a></span><span class="op">(</span><span class="va">positives</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -1720,10 +1739,11 @@ and Anaerobic Down Abundant in Supraginval)
 <code>ALDEx2.all.wilcox.paired</code> confirms itself as a conservative
 method. <code>limma.TMM</code>, along with the <code>custom</code>
 method, are able to reach the highest values of the statistic locating
-themselves on the upper part of the Figure @ref(fig:plotPositives). This
-means that their findings are in line with the <em>a priori</em>
-knowledge supplied by the user, however we are considering a toy example
-with only 58 features.</p>
+themselves on the upper part of the figure. This means that their
+findings are in line with the <em>a priori</em> knowledge supplied by
+the user, however we are considering a toy example with only 58
+features.</p>
+</blockquote>
 <hr>
 </div>
 </div>
