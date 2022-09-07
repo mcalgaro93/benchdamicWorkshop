@@ -16,7 +16,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Depends: 
     benchdamic,
-    detectseparation,
     Biobase,
     plyr,
     ggplot2,
@@ -28,8 +27,7 @@ Suggests:
     rmarkdown,
     pkgdown
 Remotes: 
-    mcalgaro93/benchdamic,
-    ikosmidis/detectseparation@v0.2
+    mcalgaro93/benchdamic
 URL: https://mcalgaro93.github.io/benchdamicWorkshop/
 BugReports: https://github.com/mcalgaro93/benchdamicWorkshop/issues/new/choose
 VignetteBuilder: knitr
