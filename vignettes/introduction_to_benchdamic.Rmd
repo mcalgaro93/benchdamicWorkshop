@@ -49,6 +49,14 @@ decide whether to spend your time by following the examples as they are
 or by playing with the large combinations of parameters offered by each
 implemented DA method.
 
+------------------------------------------------------------------------
+
+> Moreover, during the workshop you will find indented sections like
+> this one. These are in-depth section to explore after the workshop if
+> you are interested.
+
+------------------------------------------------------------------------
+
 ### Pre-requisites
 
 -   Basic knowledge of R syntax;
@@ -384,7 +392,7 @@ can be ignored.
 >     object = ps_sup,
 >     method = "CSS"
 > )
->
+> >
 > # See the normalization/scaling factors inside the object
 > head(phyloseq::sample_data(ps_sup)[, c("NF.TMM", "NF.poscounts", "NF.CSS")])
 > ```
@@ -899,8 +907,8 @@ concordance <- createConcordance(
 > -   *rank*;
 > -   *concordance* which is defined as the cardinality of the
 >     intersection of the top *rank* elements of each list, divided by
->     *rank*, *i.e.*, $\frac{L_{1:rank} \bigcap M_{1:rank}}{rank}$, where
->     *L* and *M* represent the lists of p-values of *method1* and
+>     *rank*, *i.e.*, $\frac{L_{1:rank} \bigcap M_{1:rank}}{rank}$,
+>     where *L* and *M* represent the lists of p-values of *method1* and
 >     *method2* respectively. A noise value ($<10^{-10}$) is added to
 >     each p-value (or statistic) in order to avoid duplicated values
 >     which cannot be ordered.
