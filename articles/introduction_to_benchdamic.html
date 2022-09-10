@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">benchdamicWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.2</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@ Calgaro<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
 <h2 id="an-introduction-to-benchdamic---eurobioc2022-workshop">An introduction to benchdamic - EuroBioC2022 workshop<a class="anchor" aria-label="anchor" href="#an-introduction-to-benchdamic---eurobioc2022-workshop"></a>
 </h2>
 <p>Author: Matteo Calgaro<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
-<p>Last modified: 5 September, 2022.</p>
+<p>Last modified: 9 September, 2022.</p>
 <div class="section level3">
 <h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h3>
@@ -122,9 +122,9 @@ each implemented DA method.</p>
 <h4 id="pre-requisites">Pre-requisites<a class="anchor" aria-label="anchor" href="#pre-requisites"></a>
 </h4>
 <ul>
-<li>Basic knowledge of R syntax</li>
-<li>Familiarity with the <code>phyloseq</code> class</li>
-<li>Familiarity with DA analysis in microbiome data</li>
+<li>Basic knowledge of R syntax;</li>
+<li>Familiarity with the <code>phyloseq</code> class;</li>
+<li>Familiarity with DA analysis in microbiome data.</li>
 </ul>
 <p>Some suggested background readings for the workshop:</p>
 <ul>
@@ -196,12 +196,12 @@ during the final 10 minutes.</p>
 </h4>
 <p>During this workshop you will:</p>
 <ul>
-<li><p>see the main functions of <code>benchdamic</code></p></li>
-<li><p>compare some DA methods on a simple microbiome dataset</p></li>
+<li><p>see the main functions of <code>benchdamic</code>;</p></li>
+<li><p>compare some DA methods on a simple microbiome dataset;</p></li>
 <li><p>set up a custom method and include it into the
-benchmarking</p></li>
+benchmarking;</p></li>
 <li><p>evaluate DA methods’ performances using the graphical
-outputs</p></li>
+outputs.</p></li>
 </ul>
 </div>
 </div>
@@ -211,7 +211,7 @@ outputs</p></li>
 <div class="section level4">
 <h4 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h4>
-<p>Firstly we load some packages for basic functions and data.</p>
+<p>Firstly we load some packages for basic functions and data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">benchdamic</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Registered S3 method overwritten by 'gplots':</span></span>
@@ -227,15 +227,15 @@ outputs</p></li>
 <div class="section level4">
 <h4 id="data-loading">Data loading<a class="anchor" aria-label="anchor" href="#data-loading"></a>
 </h4>
-<p>During the workshop we will use the “ps_plaque_16S” dataset:</p>
+<p>During the workshop we will use the “ps_plaque_16S” dataset. In
+contains 16S data from:</p>
 <ul>
-<li><p>30 male subjects from the Human Microbiome Project
-(HMP);</p></li>
+<li><p>30 participants of the Human Microbiome Project (HMP);</p></li>
 <li><p>samples collected from subgingival plaque and supragingival
 plaque for each subject (a total of 60 samples);</p></li>
-<li><p>all features having the same genus-level taxonomic classification
-have been collapsed together (a total of 88 taxa corresponding to 88
-genera).</p></li>
+<li><p>88 taxa, all features having the same genus-level taxonomic
+classification have been collapsed together (a total of 88 taxa
+corresponding to 88 genera).</p></li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ps_plaque_16S"</span><span class="op">)</span></span>
@@ -258,7 +258,7 @@ data?</p>
 <blockquote>
 <p><strong>GOF structure</strong></p>
 <p>Several distributions are available in <code>benchdamic</code>: 1)
-the negative binomial (<strong>NB</strong>) distribution as proposed by
+the negative binomial (<strong>NB</strong>) distribution used in
 packages like <code>edgeR</code> or <code>DESeq2</code>, 2) the
 zero-inflated negative binomial (<strong>ZINB</strong>) distribution as
 implemented by the <code>zinbwave</code> package, 3) the truncated
@@ -266,7 +266,7 @@ Gaussian Hurdle model as implemented by the <code>MAST</code> package 4)
 the zero-inflated Gaussian (<strong>ZIG</strong>) mixture model as
 implemented by the <code>metagenomeSeq</code> package, and 5) the
 Dirichlet-Multinomial (<strong>DM</strong>) distribution which is the
-multivariate extension of the beta-binomial (e.g. used by the
+multivariate extension of the beta-binomial (<em>e.g.</em> used by the
 <code>corncob</code> package).</p>
 <p>The relationships between the functions that can be used in this
 section are explained in the next diagram. To help with the reading:
@@ -692,12 +692,12 @@ repeating the process 10 times (at least 1000 times are suggested). In
 this setting, the p-values of a perfect test should be uniformly
 distributed between 0 and 1 and the false positive rate (FPR or observed
 <span class="math inline">\(\alpha\)</span>), which is the observed
-proportion of significant tests, should match the nominal value (e.g.,
-<span class="math inline">\(\alpha=0.05\)</span>). Finally, we will use
-the <code>createTIEC</code> function which produces the data.frame for
-plotting the results.</p>
+proportion of significant tests, should match the nominal value
+(<em>e.g.</em> <span class="math inline">\(\alpha=0.05\)</span>).
+Finally, we will use the <code>createTIEC</code> function which produces
+the data.frame for plotting the results.</p>
 <p>The relationships between the functions used in this section are
-explained by the next diagram.</p>
+explained by the next diagram:</p>
 <div class="figure">
 <img src="TIEC_structure.svg" alt=""><p class="caption">Type I Error Control diagram.</p>
 </div>
@@ -706,12 +706,12 @@ explained by the next diagram.</p>
 <ol style="list-style-type: decimal">
 <li><p>Using <code>createMocks</code> function we randomly assign a
 label (‘grp1’ or ‘grp2’) to the samples which should be
-homogeneous.</p></li>
-<li><p>We run DA methods to find differences between the two groups
-using <code>runMocks</code>.</p></li>
+homogeneous;</p></li>
+<li><p>we run DA methods to find differences between the two groups
+using <code>runMocks</code>;</p></li>
 <li><p>we count the number of DA feature for each method, these are
-False Positives by construction.</p></li>
-<li><p>We repeat 1-3 many times (<em>N = 10</em>, but at least 1000 is
+False Positives by construction;</p></li>
+<li><p>we repeat 1-3 many times (<em>N = 10</em>, but at least 1000 is
 suggested) and we average the results using the <code>createTIEC</code>
 function.</p></li>
 </ol>
@@ -757,14 +757,14 @@ object) some scaling factors such as <em>TMM</em> from
 <span><span class="co">#&gt; NF.TMM column has been added.</span></span></code></pre></div>
 <p>Some messages “Found more than one”phylo” class in cache…” could be
 shown after running the previous functions. They are caused by
-duplicated class names between ‘phyloseq’ and ‘tidytree’ packages and
-can be ignored.</p>
+duplicated class names between <code>phyloseq</code> and
+<code>tidytree</code> packages and can be ignored.</p>
 <hr>
 <blockquote>
 <p><strong>Try it yourself</strong></p>
 <p>Normalization step can also be done manually, for example by using
-the <code><a href="https://rdrr.io/pkg/benchdamic/man/norm_edgeR.html" class="external-link">norm_edgeR()</a></code>, <code><a href="https://rdrr.io/pkg/benchdamic/man/norm_DESeq2.html" class="external-link">norm_DESeq2()</a></code>, and
-<code><a href="https://rdrr.io/pkg/benchdamic/man/norm_CSS.html" class="external-link">norm_CSS()</a></code> methods.</p>
+the <code>norm_edgeR</code>, <code>norm_DESeq2</code>, and
+<code>norm_CSS</code> methods.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ps_sup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/norm_edgeR.html" class="external-link">norm_edgeR</a></span><span class="op">(</span></span>
 <span>    object <span class="op">=</span> <span class="va">ps_sup</span>,</span>
@@ -840,14 +840,14 @@ to:</p>
 <ul>
 <li><p>include a <em>verbose = TRUE</em> (or <em>FALSE</em>) parameter
 to let the user know what the method is doing;</p></li>
-<li><p>return a <code>pValMat</code> which contains the matrix of raw
-p-values and adjusted p-values in <em>rawP</em> and <em>adjP</em>
-columns respectively;</p></li>
-<li><p>return a <code>statInfo</code> which contains the matrix of
-summary statistics for each feature, such as the <em>logFC</em>,
-standard errors, test statistics and so on;</p></li>
-<li><p>return a <code>name</code> which contains the complete name of
-the used method.</p></li>
+<li><p>return a <em>pValMat</em> matrix which contains the raw p-values
+and adjusted p-values in <em>rawP</em> and <em>adjP</em> columns
+respectively;</p></li>
+<li><p>return a <em>statInfo</em> matrix which contains the summary
+statistics for each feature, such as the <em>logFC</em>, standard
+errors, test statistics and so on;</p></li>
+<li><p>return a <em>name</em> which contains the complete name of the
+used method.</p></li>
 </ul>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DA_custom</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
@@ -958,11 +958,11 @@ parameters:</p>
 <span>        contrast <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"grp2"</span>, <span class="st">"grp1"</span><span class="op">)</span>,</span>
 <span>        paired <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>In this case, the “method” field, containing the name of the method
-to call, is mandatory.</p>
+<p>The <em>method</em> field, containing the name of the method to call,
+is mandatory, while the <em>verbose</em> parameter is not needed.</p>
 <p>We put all the instructions together by concatenating them in a
-single object called “my_methods” and then we run them using the
-<code>runMocks</code> function.</p>
+single object called <em>my_methods</em> and then we run them using the
+<code>runMocks</code> function:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add the custom method instances to the others</span></span>
 <span><span class="va">my_methods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">my_methods</span>, <span class="va">my_custom_method</span><span class="op">)</span></span></code></pre></div>
@@ -973,9 +973,8 @@ single object called “my_methods” and then we run them using the
 <span>    method_list <span class="op">=</span> <span class="va">my_methods</span>,</span>
 <span>    object <span class="op">=</span> <span class="va">ps_sup_filtered</span>, </span>
 <span>    verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>If some warnings are reported set <code>verbose = TRUE</code> to
-obtain the method name and the mock comparison where the warnings
-occured.</p>
+<p>If some warnings are reported set <em>verbose = TRUE</em> to obtain
+the method name and the mock comparison where the warnings occured.</p>
 <p>The structure of the output in this example is the following:</p>
 <ul>
 <li>
@@ -986,13 +985,13 @@ which contains:</p>
 <p><em>Method1</em> to <em>Method3</em> output lists on the second
 level:</p>
 <ul>
-<li><p><code>pValMat</code> which contains the matrix of raw p-values
-and adjusted p-values in <em>rawP</em> and <em>adjP</em> columns
+<li><p><em>pValMat</em> which contains the matrix of raw p-values and
+adjusted p-values in <em>rawP</em> and <em>adjP</em> columns
 respectively;</p></li>
-<li><p><code>statInfo</code> which contains the matrix of summary
-statistics for each feature, such as the <em>logFC</em>, standard
-errors, test statistics and so on;</p></li>
-<li><p><code>name</code> which contains the complete name of the used
+<li><p><em>statInfo</em> which contains the matrix of summary statistics
+for each feature, such as the <em>logFC</em>, standard errors, test
+statistics and so on;</p></li>
+<li><p><em>name</em> which contains the complete name of the used
 method.</p></li>
 </ul>
 </li>
@@ -1008,7 +1007,7 @@ Positives:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TIEC_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createTIEC.html" class="external-link">createTIEC</a></span><span class="op">(</span><span class="va">sup_mockDA</span><span class="op">)</span></span></code></pre></div>
 <p>We can plot the results by using the <code>plotFPR</code>
-function.</p>
+function:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createColors.html" class="external-link">createColors</a></span><span class="op">(</span></span>
 <span>  variable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_FPR</span><span class="op">$</span><span class="va">Method</span><span class="op">)</span><span class="op">)</span></span>
@@ -1031,33 +1030,31 @@ expectations for 0.05 and 0.1 thresholds.</p>
 <hr>
 <blockquote>
 <p><strong>Other graphical representations</strong></p>
-<p><code>createTIEC</code> produces a list of 4 <code>data.frames</code>
-and a graphical representation is available for each of them:</p>
+<p><code>createTIEC</code> produces a list of 4 data frames and a
+graphical representation is available for each of them:</p>
 <ol style="list-style-type: decimal">
-<li><p><code>df_pval</code> is a 5 columns and <em>number_of_features x
-methods x comparisons</em> rows <code>data.frame</code>. The four
-columns are called <em>Comparison</em>, <em>Method</em>,
-<em>variable</em> (which contains the feature names), <em>pval</em> and
-<em>padj</em>;</p></li>
-<li><p><code>df_FPR</code> is a 5 columns and <em>methods x
-comparisons</em> rows <code>data.frame</code>. For each set of method
-and comparison, the proportion of false positives, considering 3
-threshold (0.01, 0.05, 0.1) are reported;</p></li>
-<li><p><code>df_QQ</code> contains the average p-value for each
-theoretical quantile, i.e. the coordinates to draw the QQ-plot for
-comparing the mean observed p-value distribution across comparisons,
+<li><p><em>df_pval</em> is a 5 columns and <em>number_of_features x
+methods x comparisons</em> rows data frame. The five columns are called
+<em>Comparison</em>, <em>Method</em>, <em>variable</em> (which contains
+the feature names), <em>pval</em> and <em>padj</em>;</p></li>
+<li><p><em>df_FPR</em> is a 5 columns and <em>methods x comparisons</em>
+rows data frame. For each set of method and comparison, the proportion
+of false positives, considering 3 threshold (0.01, 0.05, 0.1) are
+reported;</p></li>
+<li><p><em>df_QQ</em> contains the average p-value for each theoretical
+quantile, <em>i.e.</em> the coordinates to draw the QQ-plot for
+comparing the mean observed p-values distribution across comparisons,
 with the theoretical uniform distribution. Indeed, the observed p-values
 should follow a uniform distribution under the null hypothesis of no
 differential abundant features presence;</p></li>
-<li><p><code>df_KS</code> is a 5 columns and <em>methods x
-comparisons</em> rows <code>data.frame</code>. For each set of method
-and comparison, the Kolmogorov-Smirnov test statistics and pvalues are
-reported in <em>KS</em> and <em>KS_pval</em> columns
-respectively.</p></li>
+<li><p><em>df_KS</em> is a 5 columns and <em>methods x comparisons</em>
+rows data frame. For each set of method and comparison, the
+Kolmogorov-Smirnov test statistics and pvalues are reported in
+<em>KS</em> and <em>KS_pval</em> columns respectively.</p></li>
 </ol>
 <p><strong>QQ-Plot</strong></p>
-<p>The p-value distribution under the null hypothesis should be uniform.
-This is qualitatively summarized in the QQ-plot.</p>
+<p>The p-values distribution under the null hypothesis should be
+uniform. This is qualitatively summarized in the QQ-plot.</p>
 <p>Methods over the bisector show a conservative behavior, while methods
 below the bisector a liberal one:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -1074,9 +1071,9 @@ Kolmogorov-Smirnov test:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotKS.html" class="external-link">plotKS</a></span><span class="op">(</span>df_KS <span class="op">=</span> <span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_KS</span>, cols <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_to_benchdamic_files/figure-html/KSplot-1.png" alt="KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods where the raw p-value distribution is compared with a uniform distribution." width="672"><p class="caption">
+<img src="introduction_to_benchdamic_files/figure-html/KSplot-1.png" alt="KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods where the raw p-values distribution is compared with a uniform distribution." width="672"><p class="caption">
 KS plot. Kolmogorov-Smirnov (KS) statistic boxplots for each DA methods
-where the raw p-value distribution is compared with a uniform
+where the raw p-values distribution is compared with a uniform
 distribution.
 </p>
 </div>
@@ -1087,9 +1084,9 @@ uniformity. <code>custom</code> method instead has the lowest KS
 value.</p>
 <p><strong>Log distribution of p-values</strong></p>
 <p>Looking at the p-values’ log-scale can also be informative. This is
-because behavior in the tail may be poor even when the overall p-value
+because behavior in the tail may be poor even when the overall p-values
 distribution is uniform, with a few unusually small p-values in an
-otherwise uniform distribution:</p>
+otherwise uniform distribution.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotLogP.html" class="external-link">plotLogP</a></span><span class="op">(</span>df_QQ <span class="op">=</span> <span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_QQ</span>, cols <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -1110,7 +1107,7 @@ distribution of negative log-transformed p-values or average p-values is
 still uniform in the 3 selected quantiles of the tail, the 3 red
 vertical segments will align to the respective dotted line. Usually,
 when a method has its red segments to the left of the IDEAL’s
-(e.g. <code>ALDEx2.iqlr.wilcox.unpaired</code>) its behavior is
+(<em>e.g.</em> <code>ALDEx2.all.wilcox.unpaired</code>) its behavior is
 conservative. Indeed, for those methods, little p-values are fewer than
 expected. On the contrary, methods with red segments to the right of the
 IDEAL’s have a liberal behavior. Overall, <code>limma.TMM</code> has the
@@ -1138,7 +1135,7 @@ function. Finally, the <code>createConcordance</code> and
 <code>plotConcordance</code> functions are used to compute and plot the
 results.</p>
 <p>The relationships between the functions used in this section are
-explained by the next diagram.</p>
+explained by the next diagram:</p>
 <div class="figure">
 <img src="concordance_structure.svg" alt=""><p class="caption">Concordance analysis diagram.</p>
 </div>
@@ -1147,16 +1144,16 @@ explained by the next diagram.</p>
 <p>If we want to measure the ability of each method to produce
 replicable results:</p>
 <ol style="list-style-type: decimal">
-<li><p>We consider a dataset with two or more groups and split it by
+<li><p>we consider a dataset with two or more groups and split it by
 half to obtain the Subset1 and Subset2 datasets using the
-<code>createSplits</code> function.</p></li>
-<li><p>We run DA methods on both subsets using the
-<code>runSplits</code> function.</p></li>
-<li><p>We compute the Concordance At the Top metric (CAT) between the
+<code>createSplits</code> function;</p></li>
+<li><p>we run DA methods on both subsets using the
+<code>runSplits</code> function;</p></li>
+<li><p>we compute the Concordance At the Top metric (CAT) between the
 lists of p-values to obtain the Between Method Concordances (BMC) and
 the Within Method Concordances (WMC);</p></li>
-<li><p>Repeat the 1-3 many times (<em>N = 10</em>, but at least 100 is
-suggested) and we average the results using the
+<li><p>we repeat the 1-3 many times (<em>N = 10</em>, but at least 100
+is suggested) and we average the results using the
 <code>createConcordance</code> function.</p></li>
 </ol>
 <p>This time we consider the samples from both the supragingival and
@@ -1164,7 +1161,7 @@ subgingival plaques.</p>
 <div class="section level5">
 <h5 id="split-datasets">Split datasets<a class="anchor" aria-label="anchor" href="#split-datasets"></a>
 </h5>
-<p>We split the dataset considering the paired design.</p>
+<p>We split the dataset considering the paired design:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the HMP_BODY_SUBSITE and RSID variable as factors</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_data-methods.html" class="external-link">sample_data</a></span><span class="op">(</span><span class="va">ps_plaque_16S</span><span class="op">)</span><span class="op">$</span><span class="va">HMP_BODY_SUBSITE</span> <span class="op">&lt;-</span> </span>
@@ -1187,8 +1184,8 @@ subgingival plaques.</p>
 </h5>
 <p>For some of the methods implemented in this package it is possible to
 perform differential abundance testings for the repeated measurements
-experimental designs (e.g. by adding the subject ID in the model formula
-of <code>limma</code>).</p>
+experimental designs (<em>e.g.</em> by adding the subject ID in the
+model formula of <code>limma</code>).</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_limma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/set_limma.html" class="external-link">set_limma</a></span><span class="op">(</span></span>
 <span>    design <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">RSID</span> <span class="op">+</span> <span class="va">HMP_BODY_SUBSITE</span>,</span>
@@ -1223,15 +1220,15 @@ of <code>limma</code>).</p>
 <span>    <span class="va">my_ALDEx2</span>, </span>
 <span>    <span class="va">my_custom_method</span><span class="op">)</span></span></code></pre></div>
 <p>Similarly, to set the normalization methods, the
-<code><a href="https://rdrr.io/pkg/benchdamic/man/setNormalizations.html" class="external-link">setNormalizations()</a></code> function can be used. In this case it
-has already been set up for the TIEC analysis.</p>
+<code>setNormalizations</code> function can be used. In this case it has
+already been set up for the TIEC analysis:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">my_normalizations</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 1</span></span>
 <span><span class="co">#&gt;  $ norm_edgeR:List of 2</span></span>
 <span><span class="co">#&gt;   ..$ fun   : chr "norm_edgeR"</span></span>
 <span><span class="co">#&gt;   ..$ method: chr "TMM"</span></span></code></pre></div>
-<p>The <code><a href="https://rdrr.io/pkg/benchdamic/man/runSplits.html" class="external-link">runSplits()</a></code> function generates the subsets and
+<p>The <code>runSplits</code> function generates the subsets and
 performs DA analysis on the features with at least 1 (min_counts &gt; 0)
 count in more than 2 samples (min_samples &gt; 2):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -1259,13 +1256,13 @@ with <em>TMM</em> scaling factors, <code>ALDEx2</code> with paired
 <code>custom</code> for paired data. They are organized as already
 described:</p>
 <ul>
-<li><p><code>pValMat</code> which contains the matrix of raw p-values
-and adjusted p-values in <em>rawP</em> and <em>adjP</em> columns
+<li><p><em>pValMat</em> which contains the matrix of raw p-values and
+adjusted p-values in <em>rawP</em> and <em>adjP</em> columns
 respectively;</p></li>
-<li><p><code>statInfo</code> which contains the matrix of summary
-statistics for each feature, such as the <em>logFC</em>, standard
-errors, test statistics and so on;</p></li>
-<li><p><code>name</code> which contains the complete name of the used
+<li><p><em>statInfo</em> which contains the matrix of summary statistics
+for each feature, such as the <em>logFC</em>, standard errors, test
+statistics and so on;</p></li>
+<li><p><em>name</em> which contains the complete name of the used
 method.</p></li>
 </ul>
 </li>
@@ -1279,7 +1276,7 @@ method.</p></li>
 <h5 id="comparing-the-concordances">Comparing the concordances<a class="anchor" aria-label="anchor" href="#comparing-the-concordances"></a>
 </h5>
 <p>For each pair of methods the concordance is computed by the
-<code><a href="https://rdrr.io/pkg/benchdamic/man/createConcordance.html" class="external-link">createConcordance()</a></code> function.</p>
+<code>createConcordance</code> function:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concordance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createConcordance.html" class="external-link">createConcordance</a></span><span class="op">(</span></span>
 <span>    object <span class="op">=</span> <span class="va">Plaque_16S_splitsDA</span></span>
@@ -1288,7 +1285,7 @@ method.</p></li>
 <blockquote>
 <p><strong>More details</strong></p>
 <p>The <code>createConcordance</code> function produces a long format
-<code>data.frame</code> object with several columns:</p>
+data frame object with several columns:</p>
 <ul>
 <li>
 <em>comparison</em> which indicates the comparison number;</li>
@@ -1302,19 +1299,19 @@ comparison dataset;</li>
 <li>
 <em>concordance</em> which is defined as the cardinality of the
 intersection of the top <em>rank</em> elements of each list, divided by
-<em>rank</em>, i.e., <span class="math inline">\(\frac{L_{1:rank}
-\bigcap M_{1:rank}}{rank}\)</span>, where <em>L</em> and <em>M</em>
-represent the lists of p-values of <em>method1</em> and <em>method2</em>
+<em>rank</em>, <em>i.e.</em>, <span class="math inline">\(\frac{L_{1:rank} \bigcap
+M_{1:rank}}{rank}\)</span>, where <em>L</em> and <em>M</em> represent
+the lists of p-values of <em>method1</em> and <em>method2</em>
 respectively. A noise value (<span class="math inline">\(&lt;10^{-10}\)</span>) is added to each p-value
-(or statistic) in order to avoid duplicated values which can not be
+(or statistic) in order to avoid duplicated values which cannot be
 ordered.</li>
 </ul>
 <p><strong>Concordances based on other statistics</strong></p>
-<p>The <code><a href="https://rdrr.io/pkg/benchdamic/man/createConcordance.html" class="external-link">createConcordance()</a></code> method is very flexible. In the
+<p>The <code>createConcordance</code> method is very flexible. In the
 example below the concordances are built using the log fold changes or
 other statistics instead of the p-values. To do so, it is necessary to
 know the column names generated by each differential abundance method in
-the <code>statInfo</code> matrix.</p>
+the <em>statInfo</em> matrix.</p>
 <p>Firstly, inspect the method order:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">Plaque_16S_splitsDA</span><span class="op">$</span><span class="va">Subset1</span><span class="op">$</span><span class="va">Comparison1</span><span class="op">)</span></span></code></pre></div>
@@ -1328,8 +1325,8 @@ the <code>statInfo</code> matrix.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"custom.paired"</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">Plaque_16S_splitsDA</span><span class="op">$</span><span class="va">Subset1</span><span class="op">$</span><span class="va">Comparison1</span><span class="op">$</span><span class="va">custom.paired</span><span class="op">$</span><span class="va">statInfo</span><span class="op">)</span></span></code></pre></div>
 <p>All methods, except for ALDEx2, contain the log fold change values in
-the <em>logFC</em> column of <code>statInfo</code> matrix. Knowing this,
-the concordance <code>data.frame</code> can be built using:</p>
+the <em>logFC</em> column of <em>statInfo</em> matrix. Knowing this, the
+concordance data frame can be built using:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concordance_alternative</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createConcordance.html" class="external-link">createConcordance</a></span><span class="op">(</span></span>
 <span>    object <span class="op">=</span> <span class="va">Plaque_16S_splitsDA</span>,</span>
@@ -1361,8 +1358,8 @@ concordance (WMC) (main diagonal) averaged values from rank 1 to 30.
 </p>
 </div>
 <p><code>limma.TMM</code> and <code>custom</code> methods show the
-highest BMC values while <code>ALDEx2.iqlr.wilcox.paired</code> shows
-the highest WMC value.</p>
+highest BMC values while <code>ALDEx2.all.wilcox.paired</code> shows the
+highest WMC value.</p>
 <hr>
 <blockquote>
 <p><strong>More about WMC and BMC metrics</strong></p>
@@ -1394,7 +1391,7 @@ is given, <code>createEnrichment</code> and <code>createPositives</code>
 functions can be used to analyse the enrichment of DA features in
 specific levels of the prior knowledge variable.</p>
 <p>The relationships between the functions used in this section are
-explained by the next diagram.</p>
+explained by the next diagram:</p>
 <div class="figure">
 <img src="enrichment_structure.svg" alt=""><p class="caption">Enrichment analysis diagram.</p>
 </div>
@@ -1402,9 +1399,10 @@ explained by the next diagram.</p>
 <hr>
 <ul>
 <li><p>We run DA methods to test a difference between two experimental
-groups using the <code>runDA</code> function.</p></li>
-<li><p>We use the prior knowledge (if present) to check the correctness
-of the findigs using the <code>createEnrichment</code> function</p></li>
+groups using the <code>runDA</code> function;</p></li>
+<li><p>we use the prior knowledge (if present) to check the correctness
+of the findigs using the <code>createEnrichment</code>
+function.</p></li>
 </ul>
 <div class="section level5">
 <h5 id="a-priori-knowledge">
@@ -1414,7 +1412,7 @@ of the findigs using the <code>createEnrichment</code> function</p></li>
 <ul>
 <li><p>the <strong>supragingival biofilm</strong> is directly exposed to
 the open atmosphere of the oral cavity, favoring the growth of aerobic
-species.</p></li>
+species;</p></li>
 <li><p>In the <strong>subgingival biofilm</strong>, the atmospheric
 conditions gradually become strict anaerobic, favoring the growth of
 anaerobic species.</p></li>
@@ -1427,7 +1425,7 @@ plaque</strong>.</p>
 “Tobacco exposure associated with oral microbiota oxygen utilization in
 the New York City Health and Nutrition Examination Study” by <a href="https://doi.org/10.1016/j.annepidem.2019.03.005" class="external-link">Beghini et al.
 (2019)</a>. They can be loaded using
-<code>data("microbial_metabolism")</code>.</p>
+<code>data("microbial_metabolism")</code>:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"microbial_metabolism"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">microbial_metabolism</span><span class="op">)</span></span>
@@ -1439,7 +1437,7 @@ the New York City Health and Nutrition Examination Study” by <a href="https://
 <span><span class="co">#&gt; 5  Aggregatibacter F Anaerobic</span></span>
 <span><span class="co">#&gt; 6    Alloscardovia   Anaerobic</span></span></code></pre></div>
 <p>We have to match each taxon of the phyloseq object to its type of
-metabolism.</p>
+metabolism:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract genera from the phyloseq tax_table slot</span></span>
 <span><span class="va">genera</span> <span class="op">&lt;-</span> <span class="fu">phyloseq</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/tax_table-methods.html" class="external-link">tax_table</a></span><span class="op">(</span><span class="va">ps_plaque_16S</span><span class="op">)</span><span class="op">[</span>, <span class="st">"GENUS"</span><span class="op">]</span></span>
@@ -1565,7 +1563,7 @@ previous section.</p>
 <div class="section level5">
 <h5 id="testing-the-enrichment">Testing the enrichment<a class="anchor" aria-label="anchor" href="#testing-the-enrichment"></a>
 </h5>
-<p>We use the <code><a href="https://rdrr.io/pkg/benchdamic/man/createEnrichment.html" class="external-link">createEnrichment()</a></code> with the direction
+<p>We use the <code>createEnrichment</code> with the direction
 parameter:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrichment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/createEnrichment.html" class="external-link">createEnrichment</a></span><span class="op">(</span></span>
@@ -1608,20 +1606,20 @@ parameter:</p>
 <p>The produced <em>enrichment</em> object consists in a list of
 elements as long as the number of tested methods:</p>
 <ul>
-<li><p>the <code>data</code> slot contains information for each feature.
+<li><p>the <em>data</em> slot contains information for each feature.
 P-values, adjusted p-values (or other statistics) in <em>stats</em>
 column, log fold changes (or other statistics, if specified) in
 <em>direction</em> column, differential abundance information in the
 <em>DA</em> column (according to the thresholds), the variable of
 interest for the enrichment analysis, and the name of the feature in the
 <em>feature</em> column;</p></li>
-<li><p>in the <code>tables</code> slot a maximum of <em>2 x (levels of
+<li><p>in the <em>tables</em> slot a maximum of <em>2 x (levels of
 enrichment variable)</em> contingency tables (<em>2x2</em>) are
 present;</p></li>
-<li><p>in the <code>tests</code> slot, the list of Fisher exact tests
-produced by the <code><a href="https://rdrr.io/r/stats/fisher.test.html" class="external-link">fisher.test()</a></code> function are saved for each
+<li><p>in the <em>tests</em> slot, the list of Fisher exact tests
+produced by the <code>fisher.test</code> function are saved for each
 contingency table;</p></li>
-<li><p>in the <code>summaries</code> slot, the first elements of the
+<li><p>in the <em>summaries</em> slot, the first elements of the
 contingency tables and the respective p-values are collected for
 graphical purposes.</p></li>
 </ul>
@@ -1631,26 +1629,26 @@ and the enrichment variable has Aerobic, Anaerobic, F_Anaerobic, and
 Unknown levels. For each level, we can build 2 contingency tables: one
 for DOWN Abundant vs non-DOWN Abundant features and one for UP Abundant
 vs non-UP Abundant features. The enrichment is tested using Fisher exact
-test. The <code><a href="https://rdrr.io/pkg/benchdamic/man/plotContingency.html" class="external-link">plotContingency()</a></code> function summarize all these
-information:</p>
+test. The <code>plotContingency</code> function summarize all these
+informations:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotContingency.html" class="external-link">plotContingency</a></span><span class="op">(</span>enrichment <span class="op">=</span> <span class="va">enrichment</span>, </span>
 <span>    levels_to_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aerobic"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span>, </span>
 <span>    method <span class="op">=</span> <span class="st">"limma.TMM"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Using .id, direction, level as id variables</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_to_benchdamic_files/figure-html/plotContingency-1.png" alt="Contingency tables plot. Contingency tables for Aerobic and Anaerobic taxa found as differentially abundant by DESeq2.poscounts DA method. Fisher exact test has been performed on each contingency table. If the enrichment is signficantly present, the correspondent cell will be highlighted." width="700"><p class="caption">
+<img src="introduction_to_benchdamic_files/figure-html/plotContingency-1.png" alt="Contingency tables plot. Contingency tables for Aerobic and Anaerobic taxa found as differentially abundant by DESeq2.poscounts DA method. Fisher exact test has been performed on each contingency table. If the enrichment is signficantly present, the corresponding cell will be highlighted." width="700"><p class="caption">
 Contingency tables plot. Contingency tables for Aerobic and Anaerobic
 taxa found as differentially abundant by DESeq2.poscounts DA method.
 Fisher exact test has been performed on each contingency table. If the
-enrichment is signficantly present, the correspondent cell will be
+enrichment is signficantly present, the corresponding cell will be
 highlighted.
 </p>
 </div>
 </blockquote>
 <hr>
-<p>Using the <code><a href="https://rdrr.io/pkg/benchdamic/man/plotEnrichment.html" class="external-link">plotEnrichment()</a></code> function we can see the
-enrichment analysis results.</p>
+<p>Using the <code>plotEnrichment</code> function we can see the
+enrichment analysis results:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotEnrichment.html" class="external-link">plotEnrichment</a></span><span class="op">(</span>enrichment <span class="op">=</span> <span class="va">enrichment</span>, enrichmentCol <span class="op">=</span> <span class="st">"Type"</span>, </span>
 <span>    levels_to_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aerobic"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -1668,9 +1666,9 @@ the coefficients extracted from the methods are referred to the
 significant (<span class="math inline">\(0.01 &lt; p \le 0.1\)</span>)
 amount of DOWN Abundant Anaerobic features and UP Abundant Aerobic
 features in Supragingival Plaque.</p>
-<p>To investigate the DA features, the <code><a href="https://rdrr.io/pkg/benchdamic/man/plotMutualFindings.html" class="external-link">plotMutualFindings()</a></code>
+<p>To investigate the DA features, the <code>plotMutualFindings</code>
 function can be used to extract only features which are mutually found
-as DA by more than 1 method.</p>
+as DA by more than 1 method:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotMutualFindings.html" class="external-link">plotMutualFindings</a></span><span class="op">(</span><span class="va">enrichment</span>, enrichmentCol <span class="op">=</span> <span class="st">"Type"</span>, </span>
 <span>    levels_to_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aerobic"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span>, n_methods <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
@@ -1694,9 +1692,9 @@ Plaque.</p>
 <p>To evaluate the overall performances we can also study a statistic
 based on the difference between putative True Positives (TP) and the
 putative False Positives (FP). To build the matrix to plot, the
-<code><a href="https://rdrr.io/pkg/benchdamic/man/createPositives.html" class="external-link">createPositives()</a></code> can be used. In details, the correctness
-of the DA features is evaluated comparing the direction of the top
-ranked features to the expected direction supplied by the user in the
+<code>createPositives</code> can be used. In details, the correctness of
+the DA features is evaluated comparing the direction of the top ranked
+features to the expected direction supplied by the user in the
 <em>TP</em> and <em>FP</em> lists. The procedure is performed for
 several thresholds of <em>top</em> parameter in order to observe a
 trend, if present.</p>
@@ -1721,16 +1719,16 @@ trend, if present.</p>
 <span>    TP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DOWN Abundant"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UP Abundant"</span>, <span class="st">"Aerobic"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    FP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DOWN Abundant"</span>, <span class="st">"Aerobic"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UP Abundant"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Finally, the <code><a href="https://rdrr.io/pkg/benchdamic/man/plotPositives.html" class="external-link">plotPositives()</a></code> function can be used to
+<p>Finally, the <code>plotPositives</code> function can be used to
 summarize the methods’ performances. Higher values usually represents
 better performances.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotPositives.html" class="external-link">plotPositives</a></span><span class="op">(</span><span class="va">positives</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="introduction_to_benchdamic_files/figure-html/plotPositives-1.png" alt="TP, FP differences plot. Differences between the number of True Positives and False Positives for several thresholds of the top ranked raw p-values (the top 5 lowest p-values, the top 10, 15, ..., 50) for each method." width="700"><p class="caption">
+<img src="introduction_to_benchdamic_files/figure-html/plotPositives-1.png" alt="TP, FP differences plot. Differences between the number of True Positives and False Positives for several thresholds of the top ranked raw p-values (the top 2 lowest p-values, the top 4, 6, ..., 20) for each method." width="700"><p class="caption">
 TP, FP differences plot. Differences between the number of True
 Positives and False Positives for several thresholds of the top ranked
-raw p-values (the top 5 lowest p-values, the top 10, 15, …, 50) for each
+raw p-values (the top 2 lowest p-values, the top 4, 6, …, 20) for each
 method.
 </p>
 </div>
@@ -1741,8 +1739,7 @@ method. <code>limma.TMM</code>, along with the <code>custom</code>
 method, are able to reach the highest values of the statistic locating
 themselves on the upper part of the figure. This means that their
 findings are in line with the <em>a priori</em> knowledge supplied by
-the user, however we are considering a toy example with only 58
-features.</p>
+the user.</p>
 </blockquote>
 <hr>
 </div>
@@ -1755,32 +1752,32 @@ features.</p>
 <li>
 <p><em>NB</em>, <em>ZINB</em>, and <em>DM</em> models seem to have a
 good fit when used for estimating the average counts and the proportion
-of zero</p>
+of zero;</p>
 <ul>
 <li>Methods based on those parametric distributions should work
-well</li>
+well.</li>
 </ul>
 </li>
 <li>
 <p><code>ALDEx2.all.wilcox.unpaired</code> had a conservative
-behaviour when evaluating the proportion of False Positives</p>
+behaviour when evaluating the proportion of False Positives;</p>
 <ul>
 <li>If you want to be sure about your findings, using a conservative
-method could be a good choice</li>
+method could be a good choice.</li>
 </ul>
 </li>
 <li><p><code>limma.TMM</code> results were concordant with those of the
 <code>custom</code> method. <code>ALDEx2.all.wilcox.paired</code> had
-the highest WMC values</p></li>
+the highest WMC values.</p></li>
 <li>
 <p>both <code>limma.TMM</code> and
 <code>ALDEx2.all.wilcox.paired</code> found an enriched amount of Up
 Abundant Aerobic taxa and Down Abundant Anaerobic taxa in Supragingival
-Plaque.</p>
+Plaque;</p>
 <ul>
-<li><p>We can trust the findings of both methods</p></li>
-<li><p>We can even trust more the mutual findings</p></li>
-<li><p>If the assumptions are correct ;)</p></li>
+<li><p>We can trust the findings of both methods;</p></li>
+<li><p>We can even trust more the mutual findings;</p></li>
+<li><p>If the assumptions are correct. ;)</p></li>
 </ul>
 </li>
 </ul>
@@ -1791,7 +1788,7 @@ Plaque.</p>
 <hr>
 <ol>
 <li id="fn1"><p><a href="mailto:mcalgaro93@gmail.com" class="email">mcalgaro93@gmail.com</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>University of Verona<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>University of Verona, Department of Biotechnology<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
