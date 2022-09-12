@@ -18,7 +18,7 @@ conditions.
 
 ## Pre-requisites
 
--   Basic knowledge of R syntax
+-   Intermediate knowledge of R syntax
 -   Familiarity with the `phyloseq` class
 -   Familiarity with DA analysis in microbiome data
 
@@ -51,7 +51,12 @@ You can choose any password for rstudio - that's what you will use to
 log in. It will take some time for the Docker to be downloaded and
 started, so you might consider doing this ahead of time.
 
-Once running, navigate to http://localhost:8787/ and then login with rstudio:yourchosenpassword.
+In linux, you may experience an error: "docker: Got permission denied while 
+trying to connect to the Docker daemon socket...". To solve it just run 
+the command with `sudo` privilegies or follow this [thread](https://stackoverflow.com/questions/48957195/).
+
+Once running, navigate to http://localhost:8787/ and then login with 'rstudio' 
+as username and the chosen password as password.
 
 Then please open the file 'vignettes/introduction_to_benchdamic.Rmd' to start 
 the workshop.

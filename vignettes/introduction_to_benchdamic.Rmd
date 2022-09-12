@@ -33,8 +33,8 @@ Last modified: 12 September, 2022.
 This workshop provides an introductory example on how to work with the
 analysis framework firstly proposed in **"Assessment of statistical
 methods from single cell, bulk RNA-seq, and metagenomics applied to
-microbiome data"** by [Calgaro et al.
-(2020)](https://doi.org/10.1186/s13059-020-02104-1).
+microbiome data"** by [Calgaro et al. (2020, *Genome
+Biol*)](https://doi.org/10.1186/s13059-020-02104-1).
 
 We will test a couple of methods for differential abundance (DA)
 analysis on a microbiome dataset and we will see how to test custom
@@ -59,7 +59,7 @@ implemented DA method.
 
 ### Pre-requisites
 
--   Basic knowledge of R syntax;
+-   Intermediate knowledge of R syntax;
 -   Familiarity with the `phyloseq` class;
 -   Familiarity with DA analysis in microbiome data.
 
@@ -79,7 +79,8 @@ Some suggested background readings for the workshop:
 
 The Bioconductor package we will use is named `benchdamic`, acronym for
 "BENCHmarking of Differential Abundance detection methods for MICrobial
-data".
+data". Other packages such as `phyloseq`, `ggplot2`, `cowplot`, and
+`phyloseq` are used too.
 
 ### Time outline
 
@@ -209,7 +210,8 @@ For each taxon we can compare:
 
 -   the Zero Probability Difference (**ZPD**) *i.e.* the difference
     between the probability to observe a zero and the observed
-    proportion of samples which have zero counts.
+    proportion of samples which have zero counts. Indeed, metabarcoding
+    and metagenomics data are usually very sparse.
 
 Using the `plotMD` function we can study the results. What we are
 expecting to see are no systematic trends for the mean difference
@@ -296,6 +298,13 @@ kableExtra::kable(
     column_spec(1:6, color = "black")
 ```
 
+The list includes packages for compositional (such as `ANCOMBC` and
+`ALDEx2`) and non-compositional methos. Moreover, some of them come from
+the RNA-seq data analysis (e.g. `edgeR`, `DESeq2`, `limma`...),
+single-cell RNA-seq data analysis (e.g. `Seurat`, `MAST`), or
+metabarcoding or metagenomics data analysis (e.g. `metagenomeSeq`,
+`corncob`,...).
+
 ### Type I Error Control
 
 **Assumption**: Many methods do not control the number of false
@@ -332,7 +341,7 @@ control the number of false positives in your data?
 2.  we run DA methods to find differences between the two groups using
     `runMocks`;
 
-3.  we count the number of DA feature for each method, these are False
+3.  we count the number of DA features for each method, these are False
     Positives by construction;
 
 4.  we repeat 1-3 many times (*N = 10*, but at least 1000 is suggested)
@@ -1018,7 +1027,7 @@ available, would the finding be coherent with that knowledge?
     groups using the `runDA` function;
 
 -   we use the prior knowledge (if present) to check the correctness of
-    the findigs using the `createEnrichment` function.
+    the findings using the `createEnrichment` function.
 
 #### *A priori* knowledge
 
@@ -1178,19 +1187,21 @@ enrichment <- createEnrichment(
 ------------------------------------------------------------------------
 
 Using the `plotEnrichment` function we can see the enrichment analysis
-results:
+results. In the following plot we expect to find long red bars over the
+black line, representing UP Abundant Aerobic taxa in Supragingival
+Plaque, and long blue lines under the black line, representing DOWN
+Abundant Anaerobic taxa in Supragingival Plaque:
 
 ```{r plotEnrichment, fig.width=5, fig.height=7, fig.cap="Enrichment plot. Number of differentially abundant features, colored by aerobic or anaerobic metabolism, and directed according to differential abundance direction (UP or DOWN abundant)."}
 plotEnrichment(enrichment = enrichment, enrichmentCol = "Type", 
     levels_to_plot = c("Aerobic", "Anaerobic"))
 ```
 
-Since "Subgingival Plaque" is the reference level for each method, the
-coefficients extracted from the methods are referred to the
-"Supragingival Plaque" class. `limma.TMM` and `ALDEx2.all.wilcox.paired`
-find, as expected, a statistically significant ($0.01 < p \le 0.1$)
-amount of DOWN Abundant Anaerobic features and UP Abundant Aerobic
-features in Supragingival Plaque.
+`limma.TMM` and `ALDEx2.all.wilcox.paired` find, as expected, a
+statistically significant ($0.01 < p \le 0.1$) amount of DOWN Abundant
+Anaerobic features and UP Abundant Aerobic features in Supragingival
+Plaque. Again, `ALDEx2.all.wilcox.paired` confirms its conservative
+behavior by finding less DA features.
 
 To investigate the DA features, the `plotMutualFindings` function can be
 used to extract only features which are mutually found as DA by more
