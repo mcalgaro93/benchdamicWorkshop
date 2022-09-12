@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">benchdamicWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.6</span>
       </span>
     </div>
 
@@ -104,8 +104,8 @@ Calgaro<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
 <p>This workshop provides an introductory example on how to work with
 the analysis framework firstly proposed in <strong>“Assessment of
 statistical methods from single cell, bulk RNA-seq, and metagenomics
-applied to microbiome data”</strong> by <a href="https://doi.org/10.1186/s13059-020-02104-1" class="external-link">Calgaro et al.
-(2020)</a>.</p>
+applied to microbiome data”</strong> by <a href="https://doi.org/10.1186/s13059-020-02104-1" class="external-link">Calgaro et al. (2020,
+<em>Genome Biol</em>)</a>.</p>
 <p>We will test a couple of methods for differential abundance (DA)
 analysis on a microbiome dataset and we will see how to test custom
 methods on the same dataset. Performances of each method are evaluated
@@ -129,7 +129,7 @@ you are interested.</p>
 <h4 id="pre-requisites">Pre-requisites<a class="anchor" aria-label="anchor" href="#pre-requisites"></a>
 </h4>
 <ul>
-<li>Basic knowledge of R syntax;</li>
+<li>Intermediate knowledge of R syntax;</li>
 <li>Familiarity with the <code>phyloseq</code> class;</li>
 <li>Familiarity with DA analysis in microbiome data.</li>
 </ul>
@@ -153,7 +153,9 @@ depend upon data characteristics” by <a href="https://doi.org/10.1186/s40168-0
 </h4>
 <p>The Bioconductor package we will use is named
 <code>benchdamic</code>, acronym for “BENCHmarking of Differential
-Abundance detection methods for MICrobial data”.</p>
+Abundance detection methods for MICrobial data”. Other packages such as
+<code>phyloseq</code>, <code>ggplot2</code>, <code>cowplot</code>, and
+<code>phyloseq</code> are used too.</p>
 </div>
 <div class="section level4">
 <h4 id="time-outline">Time outline<a class="anchor" aria-label="anchor" href="#time-outline"></a>
@@ -221,6 +223,9 @@ outputs.</p></li>
 <p>Firstly we load some packages for basic functions and data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">benchdamic</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: multiple methods tables found for 'aperm'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'BiocGenerics::aperm' by</span></span>
+<span><span class="co">#&gt; 'DelayedArray::aperm' when loading 'SummarizedExperiment'</span></span>
 <span><span class="co">#&gt; Registered S3 method overwritten by 'gplots':</span></span>
 <span><span class="co">#&gt;   method         from     </span></span>
 <span><span class="co">#&gt;   reorder.factor DescTools</span></span>
@@ -315,7 +320,8 @@ difference between the estimated mean and the observed mean abundance
 (log scale);</p></li>
 <li><p>the Zero Probability Difference (<strong>ZPD</strong>)
 <em>i.e.</em> the difference between the probability to observe a zero
-and the observed proportion of samples which have zero counts.</p></li>
+and the observed proportion of samples which have zero counts. Indeed,
+metabarcoding and metagenomics data are usually very sparse.</p></li>
 </ul>
 <p>Using the <code>plotMD</code> function we can study the results. What
 we are expecting to see are no systematic trends for the mean difference
@@ -680,6 +686,13 @@ p-values and statistics
 </tr>
 </tbody>
 </table>
+<p>The list includes packages for compositional (such as
+<code>ANCOMBC</code> and <code>ALDEx2</code>) and non-compositional
+methos. Moreover, some of them come from the RNA-seq data analysis
+(e.g. <code>edgeR</code>, <code>DESeq2</code>, <code>limma</code>…),
+single-cell RNA-seq data analysis (e.g. <code>Seurat</code>,
+<code>MAST</code>), or metabarcoding or metagenomics data analysis
+(e.g. <code>metagenomeSeq</code>, <code>corncob</code>,…).</p>
 </div>
 <div class="section level4">
 <h4 id="type-i-error-control">Type I Error Control<a class="anchor" aria-label="anchor" href="#type-i-error-control"></a>
@@ -716,7 +729,7 @@ label (‘grp1’ or ‘grp2’) to the samples which should be
 homogeneous;</p></li>
 <li><p>we run DA methods to find differences between the two groups
 using <code>runMocks</code>;</p></li>
-<li><p>we count the number of DA feature for each method, these are
+<li><p>we count the number of DA features for each method, these are
 False Positives by construction;</p></li>
 <li><p>we repeat 1-3 many times (<em>N = 10</em>, but at least 1000 is
 suggested) and we average the results using the <code>createTIEC</code>
@@ -1408,7 +1421,7 @@ explained by the next diagram:</p>
 <li><p>We run DA methods to test a difference between two experimental
 groups using the <code>runDA</code> function;</p></li>
 <li><p>we use the prior knowledge (if present) to check the correctness
-of the findigs using the <code>createEnrichment</code>
+of the findings using the <code>createEnrichment</code>
 function.</p></li>
 </ul>
 <div class="section level5">
@@ -1655,7 +1668,10 @@ highlighted.
 </blockquote>
 <hr>
 <p>Using the <code>plotEnrichment</code> function we can see the
-enrichment analysis results:</p>
+enrichment analysis results. In the following plot we expect to find
+long red bars over the black line, representing UP Abundant Aerobic taxa
+in Supragingival Plaque, and long blue lines under the black line,
+representing DOWN Abundant Anaerobic taxa in Supragingival Plaque:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotEnrichment.html" class="external-link">plotEnrichment</a></span><span class="op">(</span>enrichment <span class="op">=</span> <span class="va">enrichment</span>, enrichmentCol <span class="op">=</span> <span class="st">"Type"</span>, </span>
 <span>    levels_to_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aerobic"</span>, <span class="st">"Anaerobic"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -1666,13 +1682,11 @@ aerobic or anaerobic metabolism, and directed according to differential
 abundance direction (UP or DOWN abundant).
 </p>
 </div>
-<p>Since “Subgingival Plaque” is the reference level for each method,
-the coefficients extracted from the methods are referred to the
-“Supragingival Plaque” class. <code>limma.TMM</code> and
-<code>ALDEx2.all.wilcox.paired</code> find, as expected, a statistically
-significant (<span class="math inline">\(0.01 &lt; p \le 0.1\)</span>)
-amount of DOWN Abundant Anaerobic features and UP Abundant Aerobic
-features in Supragingival Plaque.</p>
+<p><code>limma.TMM</code> and <code>ALDEx2.all.wilcox.paired</code>
+find, as expected, a statistically significant (<span class="math inline">\(0.01 &lt; p \le 0.1\)</span>) amount of DOWN
+Abundant Anaerobic features and UP Abundant Aerobic features in
+Supragingival Plaque. Again, <code>ALDEx2.all.wilcox.paired</code>
+confirms its conservative behavior by finding less DA features.</p>
 <p>To investigate the DA features, the <code>plotMutualFindings</code>
 function can be used to extract only features which are mutually found
 as DA by more than 1 method:</p>
