@@ -24,7 +24,7 @@ Author: Matteo Calgaro[^1]
 
 [^1]: University of Verona, Department of Biotechnology
 
-Last modified: 9 September, 2022.
+Last modified: 12 September, 2022.
 
 ## Overview
 
@@ -52,7 +52,7 @@ implemented DA method.
 ------------------------------------------------------------------------
 
 > Moreover, during the workshop you will find indented sections like
-> this one. These are in-depth section to explore after the workshop if
+> this one. These are in-depth sections to explore after the workshop if
 > you are interested.
 
 ------------------------------------------------------------------------
