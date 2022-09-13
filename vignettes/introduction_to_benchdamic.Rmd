@@ -80,7 +80,7 @@ Some suggested background readings for the workshop:
 The Bioconductor package we will use is named `benchdamic`, acronym for
 "BENCHmarking of Differential Abundance detection methods for MICrobial
 data". Other packages such as `phyloseq`, `ggplot2`, `cowplot`, and
-`phyloseq` are used too.
+`kableExtra` are used too.
 
 ### Time outline
 
