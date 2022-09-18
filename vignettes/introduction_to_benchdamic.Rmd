@@ -289,7 +289,7 @@ kableExtra::kable(
     x = available_methods, 
     caption = "DA methods available in benchdamic.",
     col.names = c("Method (package)", "Short description", "Test",
-        "Normalization / Transformation", "Suggested input", "Output"), 
+        "Normalization / Transformation", "Suggested input", "Output", "Application"), 
     booktabs = TRUE) %>%
     kable_styling(latex_options = "scale_down") %>%
     row_spec(0, bold = TRUE, color = "black") %>%
@@ -297,13 +297,6 @@ kableExtra::kable(
     column_spec(2:4, width = "6cm") %>%
     column_spec(1:6, color = "black")
 ```
-
-The list includes packages for compositional (such as `ANCOMBC` and
-`ALDEx2`) and non-compositional methos. Moreover, some of them come from
-the RNA-seq data analysis (e.g. `edgeR`, `DESeq2`, `limma`...),
-single-cell RNA-seq data analysis (e.g. `Seurat`, `MAST`), or
-metabarcoding or metagenomics data analysis (e.g. `metagenomeSeq`,
-`corncob`,...).
 
 ### Type I Error Control
 
