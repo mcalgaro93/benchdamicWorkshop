@@ -1,6 +1,6 @@
 Package: benchdamicWorkshop
 Title: EuroBioC2022 workshop for benchdamic 
-Version: 0.0.7
+Version: 0.0.8
 Authors@R: 
     person(given = "Matteo",
            family = "Calgaro",
