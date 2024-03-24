@@ -14,11 +14,11 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Imports:
+    benchdamic
 Depends: 
     Biobase
 Suggests: 
-    benchdamic,
-    pdflatex,
     knitr,
     rmarkdown,
     pkgdown,
@@ -27,8 +27,6 @@ Suggests:
     cowplot,
     phyloseq,
     kableExtra
-Remotes: 
-    mcalgaro93/benchdamic
 URL: https://mcalgaro93.github.io/benchdamicWorkshop/
 BugReports: https://github.com/mcalgaro93/benchdamicWorkshop/issues/new/choose
 VignetteBuilder: knitr
