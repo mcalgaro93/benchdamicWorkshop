@@ -1,19 +1,19 @@
 Package: benchdamicWorkshop
-Title: EuroBioC2022 workshop for benchdamic 
-Version: 0.0.8
+Title: Quadram workshop 2024 - benchdamic
+Version: 0.0.9
 Authors@R: 
     person(given = "Matteo",
            family = "Calgaro",
            role = c("aut", "cre"),
            email = "mcalgaro93@gmail.com",
            comment = c(ORCID = "0000-0002-3056-518X"))
-Description: This package contains the material for the EuroBioC2022 conference
-    workshop regarding benchdamic.
+Description: This package contains the material for the workshop regarding 
+    benchdamic presented to the science group at Quadram in 2024.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.3
 Imports:
     benchdamic
 Depends: 
