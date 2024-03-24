@@ -1,9 +1,9 @@
 ---
-title: 'An introduction to benchdamic - EuroBioC2022 workshop'
+title: 'An introduction to benchdamic - Quadram workshop'
 author: Matteo Calgaro^[mcalgaro93@gmail.com]
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{An introduction to benchdamic - EuroBioC2022 workshop}
+  %\VignetteIndexEntry{An introduction to benchdamic - Quadram workshop}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -18,13 +18,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# An introduction to benchdamic - EuroBioC2022 workshop
+# An introduction to benchdamic - Quadram workshop
 
 Author: Matteo Calgaro[^1]
 
 [^1]: University of Verona, Department of Biotechnology
 
-Last modified: 12 September, 2022.
+Last modified: 25 March, 2024.
 
 ## Overview
 
@@ -60,7 +60,8 @@ implemented DA method.
 ### Pre-requisites
 
 -   Intermediate knowledge of R syntax;
--   Familiarity with the `phyloseq` class;
+-   Familiarity with the `phyloseq` or `TreeSummarizedExperiment`
+    classes;
 -   Familiarity with DA analysis in microbiome data.
 
 Some suggested background readings for the workshop:
@@ -74,6 +75,9 @@ Some suggested background readings for the workshop:
 -   "Normalization and microbial differential abundance strategies
     depend upon data characteristics" by [Weiss et al.
     (2017)](https://doi.org/10.1186/s40168-017-0237-y);
+-   "benchdamic: benchmarking of differential abundance methods for
+    microbiome data" by [Calgaro et al.
+    (2023)](https://doi.org/10.1093/bioinformatics/btac778).
 
 ### *R* / *Bioconductor* packages used
 
@@ -84,19 +88,18 @@ data". Other packages such as `phyloseq`, `ggplot2`, `cowplot`, and
 
 ### Time outline
 
-During the workshop we will have the first 35 minutes of active coding
-(using the supplied examples). Questions are being addressed during the
-final 10 minutes.
+During the workshop we will have the first 40 minutes of active coding
+(using the supplied examples). Questions are being addressed afterwards.
 
-| Activity             | Time       |
-|----------------------|------------|
-| Overview             | 2 - 3 mins |
-| GOF                  | 5 mins     |
-| TIEC                 | 12 mins    |
-| Concordance          | 5 mins     |
-| Enrichment           | 9 mins     |
-| Conclusions          | 1 min      |
-| Questions and Answer | 10m        |
+| Activity             | Time    |
+|----------------------|---------|
+| Overview             | 3 mins  |
+| GOF                  | 6 mins  |
+| TIEC                 | 13 mins |
+| Concordance          | 6 mins  |
+| Enrichment           | 10 mins |
+| Conclusions          | 2 min   |
+| Questions and Answer |         |
 
 ### Workshop goals and objectives
 
