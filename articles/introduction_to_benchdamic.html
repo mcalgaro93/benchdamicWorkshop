@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>An introduction to benchdamic - EuroBioC2022 workshop • benchdamicWorkshop</title>
+<title>An introduction to benchdamic - Quadram workshop • benchdamicWorkshop</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="An introduction to benchdamic - EuroBioC2022 workshop">
+<script src="../pkgdown.js"></script><meta property="og:title" content="An introduction to benchdamic - Quadram workshop">
 <meta property="og:description" content="benchdamicWorkshop">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">benchdamicWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.9</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/introduction_to_benchdamic.html">An introduction to benchdamic - EuroBioC2022 workshop</a>
+      <a href="../articles/introduction_to_benchdamic.html">An introduction to benchdamic - Quadram workshop</a>
     </li>
   </ul>
 </li>
@@ -76,7 +76,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>An introduction to benchdamic - EuroBioC2022
+      <h1 data-toc-skip>An introduction to benchdamic - Quadram
 workshop</h1>
                         <h4 data-toc-skip class="author">Matteo
 Calgaro<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
@@ -91,10 +91,10 @@ Calgaro<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>
     
     
 <div class="section level2">
-<h2 id="an-introduction-to-benchdamic---eurobioc2022-workshop">An introduction to benchdamic - EuroBioC2022 workshop<a class="anchor" aria-label="anchor" href="#an-introduction-to-benchdamic---eurobioc2022-workshop"></a>
+<h2 id="an-introduction-to-benchdamic---quadram-workshop">An introduction to benchdamic - Quadram workshop<a class="anchor" aria-label="anchor" href="#an-introduction-to-benchdamic---quadram-workshop"></a>
 </h2>
 <p>Author: Matteo Calgaro<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
-<p>Last modified: 12 September, 2022.</p>
+<p>Last modified: 25 March, 2024.</p>
 <div class="section level3">
 <h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h3>
@@ -130,7 +130,8 @@ you are interested.</p>
 </h4>
 <ul>
 <li>Intermediate knowledge of R syntax;</li>
-<li>Familiarity with the <code>phyloseq</code> class;</li>
+<li>Familiarity with the <code>phyloseq</code> or
+<code>TreeSummarizedExperiment</code> classes;</li>
 <li>Familiarity with DA analysis in microbiome data.</li>
 </ul>
 <p>Some suggested background readings for the workshop:</p>
@@ -145,6 +146,9 @@ across 38 datasets” by <a href="https://doi.org/10.1038/s41467-022-28034-z" cl
 <li>“Normalization and microbial differential abundance strategies
 depend upon data characteristics” by <a href="https://doi.org/10.1186/s40168-017-0237-y" class="external-link">Weiss et al.
 (2017)</a>;</li>
+<li>“benchdamic: benchmarking of differential abundance methods for
+microbiome data” by <a href="https://doi.org/10.1093/bioinformatics/btac778" class="external-link">Calgaro et al.
+(2023)</a>.</li>
 </ul>
 </div>
 <div class="section level4">
@@ -160,9 +164,9 @@ Abundance detection methods for MICrobial data”. Other packages such as
 <div class="section level4">
 <h4 id="time-outline">Time outline<a class="anchor" aria-label="anchor" href="#time-outline"></a>
 </h4>
-<p>During the workshop we will have the first 35 minutes of active
+<p>During the workshop we will have the first 40 minutes of active
 coding (using the supplied examples). Questions are being addressed
-during the final 10 minutes.</p>
+afterwards.</p>
 <table class="table">
 <thead><tr class="header">
 <th>Activity</th>
@@ -171,31 +175,31 @@ during the final 10 minutes.</p>
 <tbody>
 <tr class="odd">
 <td>Overview</td>
-<td>2 - 3 mins</td>
+<td>3 mins</td>
 </tr>
 <tr class="even">
 <td>GOF</td>
-<td>5 mins</td>
+<td>6 mins</td>
 </tr>
 <tr class="odd">
 <td>TIEC</td>
-<td>12 mins</td>
+<td>13 mins</td>
 </tr>
 <tr class="even">
 <td>Concordance</td>
-<td>5 mins</td>
+<td>6 mins</td>
 </tr>
 <tr class="odd">
 <td>Enrichment</td>
-<td>9 mins</td>
+<td>10 mins</td>
 </tr>
 <tr class="even">
 <td>Conclusions</td>
-<td>1 min</td>
+<td>2 min</td>
 </tr>
 <tr class="odd">
 <td>Questions and Answer</td>
-<td>10m</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -223,6 +227,9 @@ outputs.</p></li>
 <p>Firstly we load some packages for basic functions and data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">benchdamic</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'rmutil':</span></span>
+<span><span class="co">#&gt;   method         from</span></span>
+<span><span class="co">#&gt;   print.response httr</span></span>
 <span><span class="co">#&gt; Registered S3 method overwritten by 'gplots':</span></span>
 <span><span class="co">#&gt;   method         from     </span></span>
 <span><span class="co">#&gt;   reorder.factor DescTools</span></span>
@@ -281,8 +288,8 @@ multivariate extension of the beta-binomial (<em>e.g.</em> used by the
 section are explained in the next diagram. To help with the reading:
 green boxes represent the inputs or the outputs, red boxes are the
 methods and blue boxes are the main parameters of those method.</p>
-<div class="figure">
-<img src="GOF_structure.svg" alt=""><p class="caption">Goodness of Fit diagram</p>
+<div class="float">
+<img src="GOF_structure.svg" alt="Goodness of Fit diagram"><div class="figcaption">Goodness of Fit diagram</div>
 </div>
 </blockquote>
 <hr>
@@ -329,8 +336,10 @@ values.</p>
 <span>    difference <span class="op">=</span> <span class="st">"MD"</span>,</span>
 <span>    split <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 23 rows containing non-finite values (stat_smooth).</span></span>
-<span><span class="co">#&gt; Warning: Removed 23 rows containing missing values (geom_point).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 23 rows containing non-finite outside the scale range</span></span>
+<span><span class="co">#&gt; (`stat_smooth()`).</span></span>
+<span><span class="co">#&gt; Warning: Removed 23 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
 <div class="figure">
 <img src="introduction_to_benchdamic_files/figure-html/plotGOFMD-1.png" alt="MD plot. Mean-difference (MD) between the estimated and observed count values for each distribution." width="1440"><p class="caption">
 MD plot. Mean-difference (MD) between the estimated and observed count
@@ -483,7 +492,7 @@ RNA-Seq
 DA_limma (limma)
 </td>
 <td style="text-align:left;width: 6cm; color: black !important;">
-A Linear model of the log2-transformed CPMs with weights is used to
+A linear model of the log2-transformed CPMs with weights is used to
 describe differences between groups
 </td>
 <td style="text-align:left;width: 6cm; color: black !important;">
@@ -679,6 +688,109 @@ Microbiome
 </tr>
 <tr>
 <td style="text-align:left;width: 3cm; color: black !important;">
+DA_linda (MicrobiomeStat)
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Compositional approach - The bias associated with traditional linear
+regression models based on CLR-transformed abundance data is identified
+and corrected.
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+OLS are used to estimate the bias, then the bias-corrected estimates and
+their p-values are computed from a t distribution.
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+winsor = TRUE to treat outliers, zero.handling = ‘pseudo-count’ or
+‘imputation’ to treat zeros
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+raw counts
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+p-values and statistics
+</td>
+<td style="text-align:left;">
+Microbiome
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3cm; color: black !important;">
+DA_Maaslin2 (Maaslin2)
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Based on general linear models allowing for a variety normalization and
+transformation methods.
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Tests implemented depending on the analysis method: LM, CPLM, ZICP,
+NEGBIN, ZINB
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+normalization = ‘TSS’, ‘CLR’, ‘CSS’, ‘TMM’, ‘NONE’; transform = ‘LOG’,
+‘LOGIT’, ‘AST’, ‘NONE’
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+raw counts or transformed
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+p-values and statistics
+</td>
+<td style="text-align:left;">
+Microbiome
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3cm; color: black !important;">
+DA_mixMC (mixOmics)
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Compositional and multivariate approach - Uses a sparse Partial Least
+Squares Discriminant Analysis (sPLS-DA) to identify biomarkers.
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+sPLS-DA tuned with leave-one-out cross validation
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+CLR
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+raw counts
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+Stability of the features and their relevance
+</td>
+<td style="text-align:left;">
+Omics-data
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3cm; color: black !important;">
+DA_ZicoSeq (GUniFrac)
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Omnibus F-statistic to capture diverse relationships between the
+covariates and the taxa abundance, permutation-based false discovery
+rate control, and reference taxa selection based on the pairwise log
+ratios.
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Empirical Bayes approach with an informative beta mixture prior
+</td>
+<td style="text-align:left;width: 6cm; color: black !important;">
+Multiple stage normalization with a reference set of non DA taxa
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+all types
+</td>
+<td style="text-align:left;width: 3cm; color: black !important;">
+p-values and statistics
+</td>
+<td style="text-align:left;">
+Microbiome
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 3cm; color: black !important;">
 DA_Seurat (Seurat)
 </td>
 <td style="text-align:left;width: 6cm; color: black !important;">
@@ -754,8 +866,8 @@ Finally, we will use the <code>createTIEC</code> function which produces
 the data.frame for plotting the results.</p>
 <p>The relationships between the functions used in this section are
 explained by the next diagram:</p>
-<div class="figure">
-<img src="TIEC_structure.svg" alt=""><p class="caption">Type I Error Control diagram.</p>
+<div class="float">
+<img src="TIEC_structure.svg" alt="Type I Error Control diagram."><div class="figcaption">Type I Error Control diagram.</div>
 </div>
 </blockquote>
 <hr>
@@ -802,14 +914,6 @@ object) some scaling factors such as <em>TMM</em> from
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       + Running now:norm_edgeR</span></span>
 <span><span class="co">#&gt;         Parameters:method=TMM</span></span>
-<span><span class="co">#&gt; Found more than one class "phylo" in cache; using the first, from namespace 'phyloseq'</span></span>
-<span><span class="co">#&gt; Also defined by 'tidytree'</span></span>
-<span><span class="co">#&gt; Found more than one class "phylo" in cache; using the first, from namespace 'phyloseq'</span></span>
-<span><span class="co">#&gt; Also defined by 'tidytree'</span></span>
-<span><span class="co">#&gt; Found more than one class "phylo" in cache; using the first, from namespace 'phyloseq'</span></span>
-<span><span class="co">#&gt; Also defined by 'tidytree'</span></span>
-<span><span class="co">#&gt; Found more than one class "phylo" in cache; using the first, from namespace 'phyloseq'</span></span>
-<span><span class="co">#&gt; Also defined by 'tidytree'</span></span>
 <span><span class="co">#&gt; NF.TMM column has been added.</span></span></code></pre></div>
 <p>Some messages “Found more than one”phylo” class in cache…” could be
 shown after running the previous functions. They are caused by
@@ -1144,7 +1248,27 @@ because behavior in the tail may be poor even when the overall p-values
 distribution is uniform, with a few unusually small p-values in an
 otherwise uniform distribution.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotLogP.html" class="external-link">plotLogP</a></span><span class="op">(</span>df_QQ <span class="op">=</span> <span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_QQ</span>, cols <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/benchdamic/man/plotLogP.html" class="external-link">plotLogP</a></span><span class="op">(</span>df_QQ <span class="op">=</span> <span class="va">TIEC_summary</span><span class="op">$</span><span class="va">df_QQ</span>, cols <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: `stat(quantile)` was deprecated in ggplot2 3.4.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `after_stat(quantile)` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">benchdamic</span> package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/mcalgaro93/benchdamic/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
+<span><span class="co">#&gt; Warning: Use of the `vline_size` or `size` aesthetic are deprecated, please use</span></span>
+<span><span class="co">#&gt; `linewidth` instead of `size` and `vline_width` instead of `vline_size`.</span></span>
+<span><span class="co">#&gt; Warning: Use of the `vline_size` aesthetics is deprecated, please use</span></span>
+<span><span class="co">#&gt; `vline_width` instead of `vline_size`.</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning: Use of the `vline_size` aesthetics is deprecated, please use</span></span>
+<span><span class="co">#&gt; `vline_width` instead of `vline_size`.</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning: Use of the `vline_size` aesthetics is deprecated, please use</span></span>
+<span><span class="co">#&gt; `vline_width` instead of `vline_size`.</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning: Use of the `vline_size` aesthetics is deprecated, please use</span></span>
+<span><span class="co">#&gt; `vline_width` instead of `vline_size`.</span></span></code></pre></div>
 <div class="figure">
 <img src="introduction_to_benchdamic_files/figure-html/AveLogPplot-1.png" alt="-log10(average p-value) plot ('average' refers to the average p-value computed for each quantile across mocks comparisons). Negative logarithm distribution of average p-values. Red-shaded vertical bars represent the 90, 95, and 99 percentiles for the negative log distribution of average p-values for each method. They should align with the dotted lines which represent the percentiles of the IDEAL distribution." width="672"><p class="caption">
 -log10(average p-value) plot (‘average’ refers to the average p-value
@@ -1192,8 +1316,8 @@ function. Finally, the <code>createConcordance</code> and
 results.</p>
 <p>The relationships between the functions used in this section are
 explained by the next diagram:</p>
-<div class="figure">
-<img src="concordance_structure.svg" alt=""><p class="caption">Concordance analysis diagram.</p>
+<div class="float">
+<img src="concordance_structure.svg" alt="Concordance analysis diagram."><div class="figcaption">Concordance analysis diagram.</div>
 </div>
 </blockquote>
 <hr>
@@ -1448,8 +1572,8 @@ functions can be used to analyse the enrichment of DA features in
 specific levels of the prior knowledge variable.</p>
 <p>The relationships between the functions used in this section are
 explained by the next diagram:</p>
-<div class="figure">
-<img src="enrichment_structure.svg" alt=""><p class="caption">Enrichment analysis diagram.</p>
+<div class="float">
+<img src="enrichment_structure.svg" alt="Enrichment analysis diagram."><div class="figcaption">Enrichment analysis diagram.</div>
 </div>
 </blockquote>
 <hr>
@@ -1867,7 +1991,7 @@ Plaque;</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
