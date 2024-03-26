@@ -1,6 +1,6 @@
 Package: benchdamicWorkshop
 Title: Quadram workshop 2024 - benchdamic
-Version: 0.0.9
+Version: 0.0.10
 Authors@R: 
     person(given = "Matteo",
            family = "Calgaro",
@@ -31,4 +31,4 @@ Suggests:
 URL: https://mcalgaro93.github.io/benchdamicWorkshop/
 BugReports: https://github.com/mcalgaro93/benchdamicWorkshop/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: mcalgaro93/benchdamicworkshop
+DockerImage: ghcr.io/mcalgaro93/benchdamicworkshop:latest
